@@ -30,9 +30,14 @@ module.exports = {
     // filteredFields: [],
 
     deploy: {
-      SimpleStorage: {
+      // SimpleStorage: {
+      //   fromIndex: 0,
+      //   args: [100]
+      // }
+      Purchase : {
         fromIndex: 0,
-        args: [100]
+        args: [20],
+        value: 2000000000000000000000000000
       }
     }
   },
