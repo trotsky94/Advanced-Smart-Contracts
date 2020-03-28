@@ -12,6 +12,15 @@ module.exports = {
     clientConfig: {
       miningMode: 'dev' // Mode in which the node mines. Options: dev, auto, always, off
     }
+    // Note : Usew below configuration in order to connect to geth node.
+    // endpoint: "http://localhost:8545",
+    // accounts: [
+    //   {
+    //     nodeAccounts: true, // Use node accounts
+    //     numAddresses: 1,
+    //     password: ""
+    //   }
+    // ]
   },
 
   privatenet: {
@@ -27,7 +36,7 @@ module.exports = {
     ],
     clientConfig: {
       datadir: ".embark/privatenet/datadir", // Data directory for the databases and keystore
-      miningMode: 'auto',
+      miningMode: "auto",
       genesisBlock: "config/privatenet/genesis.json" // Genesis block to initiate on first creation of a development node
     }
   },
@@ -36,7 +45,7 @@ module.exports = {
     client: "parity",
     genesisBlock: "config/privatenet/genesis-parity.json",
     datadir: ".embark/privatenet/datadir",
-    miningMode: 'off'
+    miningMode: "off"
   },
 
   externalnode: {
