@@ -1,0 +1,24 @@
+{
+  "name": "storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethereumgb/storage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ethereumgb/storage/issues"
+  },
+  "homepage": "https://github.com/ethereumgb/storage#readme",
+  "dependencies": {
+    "ethers": "^4.0.45",
+    "truffle": "^5.1.16"
+  }
+}
