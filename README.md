@@ -9,5 +9,7 @@ git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts
 
 Then go into the directory and init the submodules:
 
+```bash
 $ cd ./Advanced-Smart-Contracts
 $ git submodule update --init 
+```
