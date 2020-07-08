@@ -25,8 +25,8 @@
 			 <div class="slides">
 				<section data-markdown>
 					<textarea data-template>
+						## BCDV 1013 - Advanced Smart Contract 
 						### Contract Interactions
-						#### Advanced Smart Contract
 						<div class="author">Dhruvin Parikh, July 2020</div>
 					</textarea>
 				</section>
@@ -39,7 +39,7 @@
 
 				<section data-markdown><textarea data-template>
 					*A contract calling functions of another contract*
-					![external contract call](./c-2-c.png "External Contract Call")
+					![external contract call](./externalcall.svg "External Contract Call")
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
@@ -180,19 +180,17 @@
 
 				<section data-markdown>
 					### Non-Delegated Message Call
-					![non-delegatecall](./non-delegate-call.png "Non Delegate Call")
+					![non-delegatecall](./non-delegatecall.svg "Non Delegate Call")
 				</section>
 
 				<section data-markdown>
 					### Delegated Message Call
-					![delegatecall](./delegate-call.png "Delegate Call")
+					![delegatecall](./delegatecall.svg "Delegate Call")
 				</section>
 
 				<section data-markdown>
 					### Sender Context
-					![sendercontext](./call-context.png "Sender Context")
-					<hr/>
-					![sendercontext](./delegate-call-context.png "Sender Context")
+					![sendercontext](./sender-context.svg "Sender Context")
 				</section>
 	
 				<section>
@@ -215,7 +213,7 @@
                                 </textarea></section>
 				<section data-markdown><textarea data-template>
 					### Storage Demo
-					- <a href="../demo/storage" target="_blank">Sample Contract</a>
+					- <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/demo/storage" target="_blank">Sample Contract</a>
 					- call the delegator.setVersion() with value 0xaabbcc
 					- check the values of val1,val2,val3,val4
 					- use storageAt() to get the storage value
@@ -233,7 +231,7 @@
 
 				<section>
 					<h3>Lab</h3>
-					Follow the instructions on the readme file of <a href="../lab/proxy-delegate" target="_blank">proxy-delegate</a>
+					Follow the instructions on the readme file of <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/lab/proxy-delegate" target="_blank">proxy-delegate</a>
 				</section>
 			</div>
 		</div>
