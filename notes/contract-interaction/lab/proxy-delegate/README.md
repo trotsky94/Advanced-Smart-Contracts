@@ -1,4 +1,14 @@
 # ProxyDelegate
+
+
+## Getting started
+
+Clone this repository
+
+```bash
+git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./proxy-delegate && cd ./proxy-delegate && git filter-branch --prune-empty --subdirectory-filter ./notes/contract-interaction/lab/proxy-delegate HEAD && rm -rf ./.git
+```
+
 Following the steps to complete this exercise:
 1. clone this project
 1. update packages: ```npm ci```
