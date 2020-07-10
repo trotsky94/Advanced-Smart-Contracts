@@ -8,6 +8,7 @@ Clone this repository
 ```bash
 git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./proxy-delegate && cd ./proxy-delegate && git filter-branch --prune-empty --subdirectory-filter ./notes/contract-interaction/lab/proxy-delegate HEAD && rm -rf ./.git
 ```
+^^^ Stack Overflow : [https://stackoverflow.com/a/11835214](https://stackoverflow.com/a/11835214)
 
 Following the steps to complete this exercise:
 1. clone this project
