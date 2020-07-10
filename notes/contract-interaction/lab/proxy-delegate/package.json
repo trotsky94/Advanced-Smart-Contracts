@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethereumgb/delegate-call-exercise.git"
+    "url": "git+https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contract.git"
   },
   "keywords": [],
-  "author": "Yuet Loo Wong",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ethereumgb/delegate-call-exercise/issues"
+    "url": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contract/issues"
   },
-  "homepage": "https://github.com/ethereumgb/delegate-call-exercise#readme",
+  "homepage": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/lab/proxy-delegate#readme",
   "devDependencies": {
     "bn.js": "^5.1.1",
     "ethers": "^4.0.45",
