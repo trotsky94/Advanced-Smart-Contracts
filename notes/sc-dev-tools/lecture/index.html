@@ -156,16 +156,45 @@
 				</section>
 
 				<section data-markdown><textarea data-template>
-					<h3>The <code>genesis.json</code> file</h3>
+					## The `genesis.json` file
+					```js
+					{
+						   "config": {
+						     "chainId": 33,
+							 "homesteadBlock": 0,
+							 "eip150Block":0,
+						     "eip155Block": 0,
+						     "eip158Block": 0
+						   },
+						   "nonce": "0x0000000000000033",
+						   "timestamp": "0x0",
+					      "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+					      "gasLimit": "0x8000000",
+					      "difficulty": "0x100",
+					      "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+					      "coinbase": "0x3333333333333333333333333333333333333333",
+					      "alloc": {}
+					    }
+					```
 				</textarea></section>
 
-				<section>
-					<h3>Setting up test network</h3>
+				<section data-markdown><textarea data-template>
+					## Setting up private network
+					- Initialize chaindata directory using custom `genesis.json` 
+					```bash
+					geth init ./genesis.json --datadir mychaindata
+					```
+					- Start the private network with below command
+					```bash
+					geth --datadir ./mychaindata/ --nodiscover
+					```
+				</textarea></section>
 
-				</section>
-
-				<section>
-					<h3>geth console</h3>
+				<section data-markdown><textarea data-template></textarea>
+					## `geth console`
+					- Javascript console
+					- web3 is injected by defaultinto the console
+					- attempts to open the console on a running geth instance
 				</section>
 
 				<section>
@@ -259,9 +288,12 @@
 					```
 				</textarea></section>
 
-				<section>
-					<h3>Mining</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## Mining
+					- It is going to secure network and verify the computation
+					- In geth console run `miner.start()` to trigger mining blocks
+					- run `web3.eth.mining` to check if node is mining
+				</textarea></section>
 
 				<section data-markdown><textarea data-template>
 					## Sending ether
