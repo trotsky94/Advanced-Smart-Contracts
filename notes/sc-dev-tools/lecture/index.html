@@ -140,12 +140,24 @@
 
 				<section>
 					<h3>Networks</h3>
+					<p>participate, mine, read/write and send transactions</p>
+					<ul>
+						<li>Mainnnet - PoW (ETH 1.0)</li>
+						<li>Testnets (Free ethers)
+							<ul>
+								<li>Rinkeby - PoA</li>
+								<li>Ropsten - PoW</li>
+								<li>Goerli - PoA</li>
+								<li>Kovan - PoA</li>
+							</ul>
+						</li>
+					</ul>
 
 				</section>
 
-				<section>
+				<section data-markdown><textarea data-template>
 					<h3>The <code>genesis.json</code> file</h3>
-				</section>
+				</textarea></section>
 
 				<section>
 					<h3>Setting up test network</h3>
@@ -172,36 +184,98 @@
 					</ul>
 				</section>
 
-				<section>
-					<h3>Starting geth</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## Starting geth
+					- Mainnnet
+					```bash
+					$ geth
+					```
+					- Development (PoA with default mining `true`)
+					```bash
+					$ geth --dev
+					```
+				</textarea></section>
 
 				<section>
 					<h3>Managing account with geth</h3>
 				</section>
 
-				<section>
-					<h3>Creating new accounts</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## Creating new accounts
+					```bash
+					> personal.newAccount()
+					```
+					Give your account password!
+					```bash
+					> Passphrase:
+					> Repeat passphrase:
+					"0xc3e692ecb02a44274c31a6b08dd6dafb4fcec9cd"
+					```
+				</textarea></section>
 
-				<section>
-					<h3>List all accounts</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## List all accounts
+					```bash
+					$ geth account list
+					```
+					will output all account with their addresses
+					```bash
+					Account #0: {162d06eef892eef47541bfcb48235d67b046868b} keystore:///Users/dhruvinparikh/gbc_tut/Advanced-Smart-Contracts/eth-blockchain/dev-db/keystore/UTC--2020-07-15T20-26-08.743388000Z--162d06eef892eef47541bfcb48235d67b046868b
+					Account #1: {c3e692ecb02a44274c31a6b08dd6dafb4fcec9cd} keystore:///Users/dhruvinparikh/gbc_tut/Advanced-Smart-Contracts/eth-blockchain/dev-db/keystore/UTC--2020-07-15T20-30-21.361010000Z--c3e692ecb02a44274c31a6b08dd6dafb4fcec9cd
+					```
+					#### On your hard  disk it is stored by default at
+					- Windows : `<username>/AppData/Roaming/Ethereum`
+					- Linux : `~/.ethereum`
+					- MacOs: `~/Library/Ethereum`
+				</textarea></section>
 
-				<section>
-					<h3>Show primary account address</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## Listing primary account
+					```bash
+					> web3.eth.coinbase
+					```
+					You will see the address
+					```bash
+					"0x162d06eef892eef47541bfcb48235d67b046868b"
+					```
+					- This address is where your mined Ethers gets added!
+				</textarea></section>
 
-				<section>
-					<h3>Import account using private key</h3>
-				</section>
+				<section data-markdown><textarea data-template>
+					## Import account using private key
+					- Store the private key in file named say `pkey.prv`
+					- `--datadir` is optional command
+					```bash
+					geth account import --datadir ./dev-db/ ./pkey.prv
+					```
+					- Provide the passphrase
+					```bash
+					Password: 
+					Repeat password:
+					```
+					- You'll see the address of imported account
+					```bash 
+					Address: {ceea82aa4e740e3820a3f69301af9afa31d06728}
+					```
+				</textarea></section>
 
 				<section>
 					<h3>Mining</h3>
 				</section>
 
+				<section data-markdown><textarea data-template>
+					## Sending ether
+					```bash
+					> web3.eth.sendTransaction({from:"0x162d06eef892eef47541bfcb48235d67b046868b",to:"0xc3e692ecb02a44274c31a6b08dd6dafb4fcec9cd", value:1000000000000000000})
+					```
+					Will generate a transaction hash
+					```bash
+					"0x45462d65c9f97e07687bbad012728e3e65b48faaeb9aa27c8f7719ee816adc2e"
+					```
+				</textarea></section>
+
 				<section>
-					<h3>Sending ether</h3>
+					<h2>Ethereum API libraries</h2>
 				</section>
 
 
@@ -347,7 +421,7 @@
 
 				<section data-markdown><textarea data-template>
 					## `ethers.js` DEMO
-					- The <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-dev-tools/demo/web3-scripts#readme" target="_blank">demo</a> contains sample node scripts to deploy, interact and listen contract events.
+					- The <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-dev-tools/demo/etherjs-script#readme" target="_blank">demo</a> contains sample node scripts to deploy, interact and listen contract events.
 				</textarea></section>
 
 				<section>
