@@ -72,3 +72,4 @@ function waitForReceipt(hash, cb) {
 }
 
 // deployed at 0x8528204069eb6ef356a00e019329200c9fde4fd3 on rinkeby
+// deployed another on 0x04994738ae2F099c02BB01Bd909f4be80c75F1a8 on rinkeby

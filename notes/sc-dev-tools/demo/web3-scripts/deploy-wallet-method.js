@@ -63,3 +63,4 @@ simplestorageContract
   });
 
 // deployed at 0xA78B7C039DfF2065e5F621e747D59798e16D65a0 on rinkeby
+// deployed another at 0xa6F2d14748Ef0FF530f86E2b174f45503f2a520A on rinkeby 
