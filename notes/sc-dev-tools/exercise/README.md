@@ -9,7 +9,7 @@ Now it's time to put the lessons learned into a practical assignment.
 
 First you need to download and install geth. Geth can be downloaded from here: https://geth.ethereum.org/downloads/
 
-LINUX/UBUNTU USERS:
+### LINUX/UBUNTU USERS:
 
 You can also install geth directly:
 
