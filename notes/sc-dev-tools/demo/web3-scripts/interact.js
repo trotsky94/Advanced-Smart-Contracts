@@ -9,13 +9,13 @@ const abi = require("./abi.json");
 
 // create web3 instance
 const web3 = new Web3(
-  new Web3.providers.WebsocketProvider(process.env.WEBSOCKET_URI)
+  new Web3.providers.HttpProvider(process.env.URI)
 );
 
 // get the account object from private key
-const accountObj = web3.eth.accounts.privateKeyToAccount(
-  process.env.PRIVATE_KEY
-);
+// const accountObj = web3.eth.accounts.privateKeyToAccount(
+//   process.env.PRIVATE_KEY
+// );
 
 // add account to wallet
 web3.eth.accounts.wallet.add("0x" + process.env.PRIVATE_KEY);
@@ -35,9 +35,9 @@ simplestorageContract.methods
   });
 
 // subscribe to contract event once
-simplestorageContract.once("Increment", (error, event) => {
-  console.log(event);
-});
+// simplestorageContract.once("Increment", (error, event) => {
+//   console.log(event);
+// });
 
 // Use this code if you want to listen to events continuously.
 // Refer https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events
@@ -54,13 +54,13 @@ simplestorageContract.once("Increment", (error, event) => {
 //   .on("error", console.error);
 
 // Use this code to increment the value
-// simplestorageContract.methods
-//   .increment()
-//   .estimateGas()
-//   .then((gas) => {
-//     simplestorageContract.methods
-//       .increment()
-//       .send({ from: web3.eth.accounts.wallet[0].address, gas });
-//   });
+simplestorageContract.methods
+  .decrement()
+  .estimateGas()
+  .then((gas) => {
+    simplestorageContract.methods
+      .decrement()
+      .send({ from: web3.eth.accounts.wallet[0].address, gas });
+  });
 
 // deployed at 0xA78B7C039DfF2065e5F621e747D59798e16D65a0 on rinkeby
