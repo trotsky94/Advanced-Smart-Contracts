@@ -5,7 +5,7 @@ contract("Storage", () => {
     it("getData should pass", async () => {
         const instance = await Storage.deployed();
         const result = await instance.getData();
-        assert.equal(Object.keys(result).length, 4, "result should have 4 elements")
+        assert.equal(Object.keys(result).length, 8, "result should have 8 elements")
         assert.equal(result[0], '0xaabbccdd', "bytes4 should be 0xaabbccdd");
         assert.ok(result[1].eq(new BN(0x123456)), "uint64 should be 0x123456")
         assert.equal(result[2], true, "bool should be true")
