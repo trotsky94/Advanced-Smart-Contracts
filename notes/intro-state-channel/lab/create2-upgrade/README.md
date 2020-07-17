@@ -20,7 +20,6 @@ There are 2 scripts in the scripts folder used to generate the initcode:
 ```bash
 git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./create2-upgrade && cd ./create2-upgrade && git filter-branch --prune-empty --subdirectory-filter ./notes/state-channel-create2/lab/create2-upgrade HEAD && rm -rf ./.git
 ```
-^^^ Stack Overflow : [https://stackoverflow.com/a/11835214](https://stackoverflow.com/a/11835214)
 2. install packages: npm install
 3. update the `test/test-springboard.js` file to add logic to upgrade the Wallet contract to WalletV2
 4. after the upgrade, verify that the wallet version is 2.0
