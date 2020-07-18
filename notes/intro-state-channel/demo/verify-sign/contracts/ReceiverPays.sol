@@ -1,6 +1,6 @@
 // SPDX-License_identifier: MIT
 
-pragma solidity ^0.6.6;
+pragma solidity >0.4.0 <0.7.0;
 
 contract ReceiverPays {
     address public owner = msg.sender;
