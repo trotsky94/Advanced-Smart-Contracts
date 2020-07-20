@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+    <head>
+		<meta charset="utf-8">
+
+		<title>Meta transactions</title>
+
+		<meta name="description" content="A lesson on meta transactions">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+            .credits{
+              font-size: small;
+            }
+          </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contract 
+						#### Meta transactions
+						<div class="author">Dhruvin Parikh, July 2020</div>
+					</textarea>
+				</section>
+				<section data-markdown><textarea data-template>
+          ### Topics
+          - Introduction to meta transactions
+          - Introduction to GSN
+          - demo
+          - Building on GSN
+        </textarea></section>
+
+        <section>
+          <h3>Getting started</h3>
+          <ul style="list-style: none;">
+            <li><code>$ npm i -g @openzeppelin/cli@next ganache-cli</code></li>
+            <li><code>$ oz unpack gsn</code></li>
+          </ul>
+        </section>
+
+        <section>
+            <h2>Introduction to meta transactions</h2>
+        </section>
+
+        <section>
+          <h3>Why?</h3>
+          <ul>
+            <li>To fix user onboarding</li>
+            <li>User needs ETH to use Ethereum (Paradox: said many times)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2><i>"40% abondon a website that takes more than 3 seconds to load"</i></h2>
+        </section>
+
+        <section>
+            <section>
+              <h3>User onboarding journey</h3>
+              <img src="verticle-slide.svg">
+            </section>
+            <section>
+              <img src="create-acc.svg" width="400px">
+            </section>
+            <section>
+              <img src="purchase.svg" width="250px">
+            </section>
+        </section>
+
+        <section>
+          <h3>Enter meta transaction</h3>
+          <p>Decouple the sender of the transaction from the payer of the gas fees<p>
+        </section>
+
+        <section>
+          <h3>How do meta transactions work?</h3>
+          <ul>
+            <li>User signs a transaction and sends it to a <b>relayer</b></li>
+            <li><b>Relayer</b> wraps it and uploads it to the network</li>
+          </ul>
+        </section>
+
+        <section>
+          <img src="relayer-works.svg" width="900px">
+        </section>
+
+        <section>
+          <h3>Decentralizing layers</h3>
+          <p>using gas station networks</p>
+        </section>
+
+        <section>
+          <h3>Enter gas station network</h3>
+          <ul>
+            <li>Decentralised pool of incentivised layers</li>
+            <li>Single co-ordinating hub</li>
+            <li>Recipient dapp pay for execution</li>
+          </ul>
+          <p>(You do not need to worry about relayers, it already exists. Just code payment strategy)</p>
+        </section>
+
+        <section>
+          <img src="standards.png">
+          <p>Towards a standard for meta-txns</p>
+        </section>
+
+        <section>
+          <img src="paymaster_needs_gas.png">
+          <p>Minimize onboarding and UX friction for dapps</p>
+        </section>
+
+        <section>
+          <img src="gsn-alliance.png">
+          <p>GSN Alliance</p>
+        </section>
+
+        <section>
+          <img src="relay-hub-works.svg" width="900px">
+        </section>
+
+        <section>
+          <h3>How does GSN work?</h3>
+          <ul>
+            <li>User signs a transaction to a recipient</li>
+            <li>Picks a relayer from the pool and sends the transaction to it</li>
+            <li>Relayer checks if the recipient will pay for the execution</li>
+            <li>Relayer wraps the transaction and sends it via the hub</li>
+            <li>Recipient contract unwraps and executes the transaction</li>
+              <li>Hub pays the relayer for its effort with the recipient’s funds</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>DEMO</h3>
+          <p><a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/meta-transactions/demo/gsnv2-integration#readme" target="_blank">GSNv2 Integration</a></p>
+        </section>
+
+        <section>
+          <h3>Building on GSN</h3>
+          <p><i>"Sounds great! But how do I use it?"</i></p>
+        </section>
+
+        <section>
+          <h3>Things to consider</h3>
+          <ul>
+            <li>Write GSN-capable contracts</li>
+            <li>Send txs via a relayer on your client app</li>
+            <li>Add funds to your dapp in the GSN hub</li>
+              <li>Spin up a local GSN for development & testing</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Contracts</h3>
+          <p>Managing payment and unwrapping meta-txs</p>
+        </section>
+
+        <section data-markdown><textarea data-template>
+          ### Deciding whether to pay for a relayed call
+          ```js
+          function acceptRelayedCall(
+          address sender, ...
+          ) external view returns (uint256, ...) {
+          return isWhitelisted(sender)
+          ? _approveRelayedCall()
+          : _rejectRelayedCall(NOT_WHITELISTED);
+          }
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Unwrapping the meta-tx
+          ```js
+          function log() public {
+            address sender = _msgSender();
+            emit Called(sender);
+          }          
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Extending from GsnRecipient
+          ```js
+          import "@openzeppelin/contracts/GSN/GSNRecipient.sol";
+
+          contract MyContract is GSNRecipient {
+          function acceptRelayedCall(...) view;
+          function preRelayedCall(...);
+          function postRelayedCall(...);
+          }          
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Web3 clients
+          Routing transactions via relayers
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Using GSN web3 providers
+          ```js
+          import { GSNProvider } from '@openzeppelin/gsn-provider';
+
+          myContract.setProvider(new GSNProvider(NODE_URL, ...));
+          await myContract.methods.log().send();
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Register your dapp
+          Top-up your recipient contract balance
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Manage: fund your recipient contract
+          - `$ npm install @openzeppelin/gsn-helpers`
+          - `$ npx oz-gsn fund-recipient`<br/>
+            `--recipient $ADDRESS`<br/>
+            `--ethereumNodeURL $NODE_URL`<br/>
+            `--amount 1000000000000000000`
+        </textarea></section>
+
+        <section>
+          <h3>Local development</h3>
+          <p>spin up a GSN on your ganache</p>
+        </section>
+
+        <section data-markdown><textarea data-template>
+          ### Development: creating a local GSN
+          - `$ npm install @openzeppelin/gsn-helpers`
+          - `$ npx oz-gsn run-relayer`
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Development: in-process layer
+          ```js
+          import { GSNDevProvider } from '@openzeppelin/gsn-provider';
+
+          myContract.setProvider(new GSNDevProvider(URL, {
+          relayerAccount, ...
+          }));
+          ```
+        </textarea></section>
+                
+        <section>
+            <h3>References</h3>
+            <ul>
+                <li><a href="https://docs.opengsn.org/learn/index.html" target="_blank">open GSN docs</a></li>
+            </ul>
+        </section>
+        <section data-markdown><textarea data-template>
+
+            ## End
+            
+        </textarea></section>      
+
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+	</body>
+</html>
