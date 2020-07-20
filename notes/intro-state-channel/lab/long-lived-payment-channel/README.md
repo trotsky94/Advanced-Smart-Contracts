@@ -23,11 +23,11 @@ git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts
 
 Following the steps to complete this exercise:
 1. clone this project
-1. update packages: ```npm ci```
-2. run the test: ```npm test```
-3. make sure 1 test case passes, the one that deploys the contract
-4. write down a test case for `withdraw` and `close` by modifying `test/longlivepaymentchannel.test.js`
-7. commit your changes to github and submit your github url
+2. update packages: ```npm ci```
+3. run the test: ```npm test```
+4. make sure 1 test case passes, the one that deploys the contract
+5. write down a test case for `withdraw` and `close` by modifying `test/longlivepaymentchannel.test.js`
+6. commit your changes to github and submit your github url
 
 #### Are you feeling adventurous?
-8. Add test cases for `claimTimeOut`, `startSenderClose` and `deposit` function . (not consider for evaluation) 
+7. Add test cases for `claimTimeOut`, `startSenderClose` and `deposit` function . (not consider for evaluation) 
