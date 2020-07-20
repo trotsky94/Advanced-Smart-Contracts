@@ -1,0 +1,25 @@
+{
+  "name": "gsnv2-integration",
+  "version": "0.0.5",
+  "description": "Simple example of how to use GSNv2",
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "browserify": "16.5.1",
+    "ethers": "5.0.0-beta.187",
+    "ganache-cli": "6.9.1",
+    "serve": "11.3.0",
+    "truffle-hdwallet-provider": "1.0.17",
+    "web3": "1.2.7"
+  },
+  "scripts": {
+    "ganache": "yarn run ganache-cli -d",
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "start": "truffle deploy && ./ui/compile.sh && yarn serve ./html"
+  },
+  "author": "",
+  "license": "ISC"
+}
