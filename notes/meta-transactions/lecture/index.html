@@ -144,8 +144,35 @@
         </section>
 
         <section>
+          <h3>Example use cases of GSN</h3>
+          <ul>
+            <li><b>Pay gas in any token</b>: Allow users to pay for gas in any token</li>
+            <li><b>Pay gas in fiat</b>: Allow users to pay for gas in fiat without having to go through KYC</li>
+            <li><b>Privacy</b>: Enabling ETH-less withdrawal of tokens sent to stealth addresses</li>              
+            <li><b>Onboarding</b>: Allow dapps to subsidize the onboarding process for new users</li>
+          </ul>
+        </section>
+
+        <section>
           <h3>DEMO</h3>
           <p><a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/meta-transactions/demo/gsnv2-integration#readme" target="_blank">GSNv2 Integration</a></p>
+        </section>
+
+        <section>
+          <img src="gsn_flow_full_layered.jpg">
+          <p>Ethereum GSN Architecture</p>
+        </section>
+
+        <section>
+          <h3>Notes: Ethereum GSN Architecture</h3>
+          <ul>
+            <li><b>Client:</b> signs & sends meta transaction to relay server</li>
+            <li><b>Relay servers: </b> one for all, all for one</li>
+            <li><b>Paymaster:</b> agrees to refund server for gas fees</li>
+            <li><b>Trusted Forwarder:</b> verifies sender signature and nonce</li>
+            <li><b>Recipient contract: </b> sees original sender</li>
+            <li><b>RelayHub:</b> connecting participants trustlessly</li>
+          </ul>
         </section>
 
         <section>
