@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+    <head>
+		<meta charset="utf-8">
+
+		<title>Smart Contract Security Audit</title>
+
+		<meta name="description" content="A lesson on smart contract security audit">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/league.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+            .credits{
+              font-size: small;
+            }
+          </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contract 
+						#### Smart Contract Security Audit
+						<div class="author">Dhruvin Parikh, July 2020</div>
+					</textarea>
+				</section>
+                <section data-markdown><textarea data-template>
+                    ### Topics
+                    - Security Audit
+                    - Audit Report
+                    - Analysis Tools
+                    - References
+             </textarea></section>
+
+            <section>
+                <h2 style="text-align: left;">Powerful but tricky</h2>
+                <div class="r-stack">
+                    <img src="dao-news.jpeg" width="600px" height="300px" style="transform: rotate(-5deg);position:absolute;right:350px;top:170px" class="fragment">
+                    <img src="ethbleeding.jpg" width="600" style="transform: rotate(7deg);position:relative;left:100px;top:0px" class="fragment">
+                    <img src="coinbase-news.png" width="600" style="transform: rotate(-9deg);position:absolute;right:350px;top:300px" class="fragment">
+                    <img src="parity-hack.png" width="600" style="transform: rotate(2deg);position:relative;right:0px;top:200px" class="fragment">
+                </div>
+            </section>
+
+            <section data-markdown><textarea data-template>
+                ### Security Audit
+                An analysis of smart contracts in order to find security vulnerabilities, typically involves:
+                1. Analyze specifications
+                1. Run tests
+                1. Run automated analysis tools
+                1. Perform manual code audit
+                1. Create audit report
+              
+         </textarea></section>
+                 
+             <section data-markdown><textarea data-template>
+                ### Audit Report
+                - Typically includes:
+                   - Disclaimer
+                      - Not guarantee bug free
+                   - What was audited, version
+                   - Findings
+                     - Severity: Critical, High, Low
+                   - Recommendations
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+              ### Issue Severity
+              - Critical: can cost unlimited amount of users' funds
+              - High: can cost limited amount of users' funds
+              - Low: minor problems or better solutions
+             </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Sample Audit Reports
+                - <a href="https://github.com/EthereumCommonwealth/Auditing/issues/340#issuecomment-524348753" target="blank">Dai Security Audit Report</a>
+                - <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/audit" target="blank">OpenZeppelin Security Audit Report</a>
+                - <a href="https://github.com/w3f/polkadot-auction/blob/master/parity-audit-final.pdf" target="_blank">Polkadot sale Audit Report</a>
+                - <a href="https://github.com/sigp/public-audits" target="_blank">Public-audits by Sigma Prime</a>
+                - <a href="https://github.com/bokkypoobah/OneLedgerCrowdsaleContractAudit/tree/master/audit" target="_blank">One Ledger CrowdSale Audit Report</a>
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Security Tools
+                - Static Analyzer in Remix
+                - MythX in Remix or truffle
+                - <a href="https://consensys.github.io/smart-contract-best-practices/security_tools/" target="_blank">Security Tools</a>
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Manual Audit
+ Automatic analysis tools is not reliable, give false positive and miss finding issues; manual auditing is still required
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Audit Checklists
+                A list of common issues is a useful tool for security audit
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Useful Checklists and References
+                - <a href="https://consensys.github.io/smart-contract-best-practices/recommendations/" target="_blank">Consensys Security Best Practices</a>
+                - <a href="https://swcregistry.io" target="_blank">Smart Contract Weakness Classification</a>
+                - <a href="https://blog.sigmaprime.io/solidity-security.html" target="_blank">Solidity Security: known attack vectors and fixes</a>
+                - <a href="https://github.com/ethereum/wiki/wiki/Safety" target="_blank">Ethereum Safety Wiki</a>
+                - <a href="https://medium.com/hashex-blog/how-to-perform-your-first-smart-contract-audit-3d6883f44924" target="_blank">Smart contract security audit</a>
+                - <a href="https://blockgeeks.com/guides/audit-smart-contract/#_The_Steps_for_a_Full_Smart_Contract_Audit" target="_blank">Blockgeeks Security Audit Checklists</a>
+                - <a href="https://ethernaut.openzeppelin.com/level/0xdf51a9e8ce57e7787e4a27dd19880fd7106b9a5c" target="_blank">Ethernaut Contract Hacking Game</a>
+                </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Check for Warnings
+                - Any compiler or analysis tool warnings?
+                - Warnings could be
+                  - false positive
+                  - bug
+                    - `==` should be `=`
+                   <img src="./warning.png"></img>
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Testing
+                - Any test failures?
+                - Any function missing tests?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Code Currency
+                - Use latest solidity compiler?
+                  - may have patches for security risks
+                  - solidity v0.6.0 changes
+                    - array.length-- is not allowed
+                    - <a href="https://swcregistry.io/docs/SWC-119#tokensalesol" target="_blank">state variable shadowing</a> not allowed
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### External Calls
+                - Is there any state changes after external calls?
+                   - Is <a href="https://solidity.readthedocs.io/en/v0.6.4/security-considerations.html#use-the-checks-effects-interactions-pattern" target="_blank">Checks-Effects-Interactions</a> pattern used to avoid re-entrancy issue?
+                - Are errors in external calls <a href="https://www.dasp.co/#item-4" target="_blank">handled properly</a>?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Denial of Service (DoS)
+                - Do external calls <a href="https://github.com/ethereum/wiki/wiki/Safety#favor-pull-over-push-for-external-calls" target="_blank">favor push over pull</a>?
+                  - push: 2 accounts, A pushes to B
+                  - pull: 1 account, A pulls from contract
+                - Is <a href="https://medium.com/@jgm.orinoco/why-use-the-withdrawal-pattern-d5255921ca2a" target="_blank">withdrawal</a> pattern being used?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+               ### DoS With Block Gas Limit
+               - Cost of function execution exceeds block gas limit
+               - <a href="https://swcregistry.io/docs/SWC-128#dos_numbersol" target="_blank">Here</a> is an example of modifying large array leads to denial of service attack
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Permission
+                - Functions should have proper permission checking to ensure only the authorized can run the functions
+                - <a href="https://swcregistry.io/docs/SWC-106" target="_blank">Unprotected selfdestruct</a>
+ ```
+    function kill() public {
+       selfdestruct(msg.sender);
+    }
+ ```
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+             ### Failure Handling
+             - Can the contract <a href="https://github.com/ethereum/wiki/wiki/Safety#circuit-breakers-pause-contract-functionality" target="_blank">pause operation</a>?
+             - Can malicious actions be <a href="https://github.com/ethereum/wiki/wiki/Safety#speed-bumps-delay-contract-actions" target="_blank">delayed</a>?
+             - How are fund at risk managed?
+               - Can broken contract be <a href="https://github.com/ethereum/wiki/wiki/Safety#upgrading-broken-contracts" target="_blank">upgraded</a>?
+               - Are users given grace period to upgrade?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Front Running
+                - Is there <a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#front-running" target="_blank">transaction ordering dependence</a>?
+                 
+                - Insertion attack: ERC20 Approve/TransferFrom
+                  - changing approval from 5 to 3 may result in 8 (5 + 3) tokens transfered
+                  - work around by approving 5, then 0, then 3
+ 
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Overflow
+                - Is there integer wraparound issue?
+                - When arithmetic reaches bound, it wraps
+                   - uint8(255) + uint8(1) == 0
+                   - uint8(0) - uint8(1) == 255
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Division
+                - Is there division by zero?
+                  - EVM will revert
+                - Is there <a href="https://github.com/ethereum/wiki/wiki/Safety#beware-rounding-with-integer-division" target="_blank">rounding</a> issue?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Delegate Calls
+                - Is the context used properly?
+                - Will the call cause <a href="https://ethernaut.openzeppelin.com/level/0x68756ad5e1039e4f3b895cfaa16a3a79a5a73c59" target="_blank">change of control</a>?
+         </textarea></section>
+ 
+             <section data-markdown><textarea data-template>
+                ### Unexpected Contract Balance
+                - Any strict assumption of contract balance?
+                   - Ether can be <a href="https://consensys.github.io/smart-contract-best-practices/known_attacks/#forcibly-sending-ether-to-a-contract" target="_blank">forced sent to a contract</a>
+                   - Contract can be pre-funded with ether
+                - Attack on this <a href="https://gist.github.com/vasa-develop/415a17c709d804a4d351485cd1b7c981#file-ethergame-sol" target="_blank">example</a> can make claimReward() to always fail
+         </textarea></section>
+             <section data-markdown><textarea data-template>
+                ### Bounty Program
+                - Used to get community to audit code
+                  - <a href="https://consensys.github.io/smart-contract-best-practices/bug_bounty_list" target="_blank">Consensys Bug Bounty List</a>
+                  - <a href="https://bounty.ethereum.org" target="_blank">Ethereum Bounty Program</a>
+         </textarea></section>
+            
+             <section data-markdown><textarea data-template>
+
+                ## End
+            
+            </textarea></section>      
+
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+        </script>
+        <script src="socket.io/socket.io.js"></script>
+        <script src="node_modules/reveal-notes-server/client.js"></script>
+	</body>
+</html>
