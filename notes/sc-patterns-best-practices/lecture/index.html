@@ -1,0 +1,742 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<title>Smart Contract Design patterns and best practices</title>
+
+		<meta name="description" content="A lesson on smart contract design patterns and best practices">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/sky.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+            .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+              text-transform: none;
+            }
+      
+            .two-column {
+              display: flex;
+              flex-wrap: wrap;
+            }
+      
+            .two-column em {
+              margin: 20px;
+            }
+      
+            .reveal .big-and-bold {
+              font-weight: bold;
+              font-size: 135%;
+            }
+      
+            .reveal .shrunk-a-bit {
+              font-size: 90%;
+            }
+      
+            .reveal .shrunk-a-bit pre {
+              width: 100%;
+            }
+      
+            .reveal pre {
+              width: 100%;
+            }
+      
+            .reveal .highlight {
+              color: yellow;
+              font-weight: bold;
+            }
+      
+            .reveal .highlightRed {
+              color: red;
+              font-weight: bold;
+            }
+      
+            .reveal .highlightGreen {
+              color: green;
+              font-weight: bold;
+            }
+      
+            .left {
+              left:-8.33%;
+              text-align: left;
+              float: left;
+              width:49%;
+              z-index:-10;
+            }
+      
+            .right {
+              left:31.25%;
+              top: 75px;
+              text-align: left;
+              float: right;
+              z-index:-10;
+              width:49%;
+            }
+          </style>
+	</head>
+	<body>
+		<div class="reveal">
+			 <div class="slides">
+
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contract 
+						#### Smart contract design patterns and best practices
+						<div class="author">Dhruvin Parikh, July 2020</div>
+					</textarea>
+                </section>
+
+                <section>
+					<h3>Topics</h3>
+                    <ul>
+                        <li>Design patterns</li>
+                        <li>Recommended design patterns</li>
+                        <li>Smart contract best practices</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Upgradability</h2>
+                </section>
+
+                <section>
+                    <h3>Smart contracts</h3>
+                    <ul>
+                        <li>"Code is law"</li>
+                        <li>Ethereum smart contracts are immutables by design</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Immutability</h3>
+                    <ul>
+                        <li>Great for users
+                            <ul>
+                                <li>Minimize trust require by cintract's users</li>
+                                <li>Users can check set of rules</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Require caution for developers
+                            <ul>
+                                <li>New feature?</li>
+                                <li>Bug fixes?</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Contract Upgradability</h3>
+                    <p>Add upgrability capacity with two main strategies</p>
+                    <ul>
+                        <li>Data Separation</li>
+                        <li>Delegatecall Proxy</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Data Separation</h3>
+                    <p>Two contracts:</p>
+                    <ul>
+                        <li>Logic: holds the logic(mutable)</li>
+                        <li>Data: holds the data (immutable)</li>
+                    </ul>
+                    <img src="data-sepration.png">
+                </section>
+
+                <section>
+                    <h3>Data Separation</h3>
+                    <img src="data-sepration.png">
+                    <div data-markdown class="left" style="margin-right: 1px;">
+                        ```js
+                        contract Logic {
+                            Data data;
+
+                            function inc() public{
+                                data.setV(data.v() + 1);
+                            }
+                            function v() public 
+                            returns(uint){
+                                return data.v();
+                            }
+                        }
+                        ```
+                    </div>
+                    <div data-markdown class="right" style="margin-left: 1px;">
+                        ```js
+                        contract Data is Owner {
+
+                            uint public v;
+
+                            function setV(uint new_v) 
+                            onlyOwner 
+                            public {
+
+                                v = new_v;
+                            }
+                        }
+                        ```
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Data storage strategy: key value pair</h3>
+                    <div data-markdown>
+                        ```js
+                        contract DataContract is Owner {
+                            mapping(bytes32 =&gt; uint) uIntStorage;
+                           
+                            function getUint(bytes32 key) view public returns(uint) {
+                              return uintStorage[key];
+                          }
+                           
+                            function setUint(bytes32 key, uint new_val) onlyOwner public {
+                              uintStorage[key] = new_val;
+                            }
+                          }
+                        ```
+                    </div>
+                    <p>It is also known as <a href="https://github.com/ethereum/EIPs/issues/930" target="_blank">Eternal storage</a></p>
+                </section>
+
+                <section>
+                    <h3>Data Separation: alternative</h3>
+                    <p>Use of third proxy contract</p>
+                    <ul>
+                        <li>Provide constant entry point for users</li>
+                    </ul>
+                    <img src="data-separation-alternative.png">
+                </section>
+
+                <section>
+                    <h3>Data separation: Recommendations</h3>
+                    <ul>
+                        <li>Define clear separation between data and logic</li>
+                        <li>Keep simple implementation
+                            <ul>
+                                <li>Avoid complex data storage (ex: key-value pair)</li>
+                            </ul>
+                        </li>
+                        <li>Define the upgrade procedure
+                            <ul>
+                                <li>How to upgrade the contracts? Pause contracts</li>
+                                <li>How to store keys</li>
+                                <li>How to communicate with users</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>How to Upgrade (Solution : 1)</h3>
+                    <p>Upgrade: deploy new logic contract and disable old one</p>
+                    <img src="upgrade-1.png">
+                </section>
+
+                <section>
+                    <h3>How to Upgrade (Solution: 2)</h3>
+                    <p>Upgrade: deploy new logic contract and forward call</p>
+                    <img src="upgrade-2.png">
+                </section>
+
+                <section>
+                    <h2>Delegatecall Proxy</h2>
+                </section>
+
+                <section>
+                    <h3>EVM Internals</h3>
+                    <ul>
+                        <li>EVM has a hardvard architecture
+                            <ul>
+                                <li>Section code != Section data</li>
+                            </ul>
+                        </li>
+                        <li>A contract can
+                            <ul>
+                                <li>Call another contract</li>
+                            </ul>
+                        </li>
+                        <li>A contract cannot
+                            <ul>
+                                <li>Write directly to another contract's data</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section data-markdown>
+                    ### delegatecall instruction
+                    - **Delegatecall instruction:**
+                     - Execute code from external contracts from the caller's data context
+                    - **Example:**
+                     - contract A *delegatecalls* to contract B
+                     - The code of contract B will be executed using data fo contract A
+                    - **Designed for libraries**
+                </section>
+
+                <section data-markdown>
+                    ### Library
+                    ```js
+                    library Lib {
+                        struct Data { uint val; }
+                        function set(Data storage self, uint new_val) public {
+                            self.val = new_val;
+                        }
+                    }
+
+                    contract C {
+                        Lib.Data public myVal;
+                        function set(uint new_val) public {
+                            Lib.set(myVal, new_val);
+                        }
+                    }
+                    ```
+                </section>
+
+                <section data-markdown>
+                    ### delegatecall
+                    - **Callee needs to know the exact memory layout of the caller**
+                     - For library: handled by compiler
+                     - For user-level call: needs to be **really** careful
+                </section>
+
+                <section data-markdown>
+                    ### Upgradability through delegatecall
+                    - **Two contracts:**
+                     - Proxy contracts: holds data: (immutable)
+                     - Logic: holds the logic (mutable)
+                     - Fallback function of proxy delegatecalls to Logic
+                    
+                     ![proxy-pattern](./proxy-delegatecall.png)
+                </section>
+
+                <section data-markdown>
+                    ### Upgradability through delegatecall
+                    - **Upgrade: change the logic contract**
+                    - **Each version of the logic contract must follo the same memory layout**
+                     - Do you know precisely how Solidity store variables in memory?
+                </section>
+
+                <section>
+                    <h3>Delegatecall Example</h3>
+                    <div class="left" data-markdown>
+                        ```js
+                        contract Proxy{
+                            uint public a;
+                            address public pointer;
+
+                            ...
+                            function () public {
+                                pointer.delegatecall(..)
+                            }
+                        }
+                        ```
+                        ```js
+                        contract MyContract_V1 {
+                            uint public a;
+                            address public pointer;
+
+                            function set(uint val) public {
+                                a = val;
+                            }
+                        }
+                        ```
+                    </div>
+                    <div class="right">
+                        <img src="delegatecall-example.png">
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Delegatecall Example</h3>
+                    <div class="left" data-markdown>
+                        ```js
+                        contract Proxy{
+                            uint public a;
+                            address public pointer;
+
+                            ...
+                            function () public {
+                                pointer.delegatecall(..)
+                            }
+                        }
+                        ```
+                        ```js
+                        contract MyContract_V1 {
+                            uint public a;
+                            address public pointer;
+
+                            function set(uint val) public {
+                                a = val;
+                            }
+                        }
+                        ```
+                    </div>
+                    <div class="right" data-markdown>
+                        ![delegatecall-ex](delegatecall-example.png)
+                        ```js
+                        contract MyContract_V1 {
+                            uint public pointer;
+                            address public a;
+
+                            function set(uint val) public {
+                                a = val;
+                            }
+                        }
+                        ```
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Delegatecall Example</h3>
+                    <div class="left" data-markdown>
+                        ```js
+                        contract Proxy{
+                            uint public a;
+                            address public pointer;
+
+                            ...
+                            function () public {
+                                pointer.delegatecall(..)
+                            }
+                        }
+                        ```
+                        ```js
+                        contract MyContract_V1 {
+                            uint public a;
+                            address public pointer;
+
+                            function set(uint val) public {
+                                a = val;
+                            }
+                        }
+                        ```
+                    </div>
+                    <div class="right" data-markdown>
+                        ![delegatecall-ex](delegatecall-example-v2.png)
+                        ```js
+                        contract MyContract_V1 {
+                            uint public pointer;
+                            address public a;
+
+                            function set(uint val) public {
+                                a = val;
+                            }
+                        }
+                        ```
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Examples of incorrect upgrades</h3>
+                    <img src="incorrect.png">
+                </section>
+
+                <section data-markdown>
+                    ### Delegatecall Proxy: Recommendations
+                    - **Never remove a variable**
+                    - **Never change a variable type**
+                     - Packing issue
+                    - **Be careful with the inheritance**
+                     - Inheritance order impacts the memory layout
+                </section>
+
+                <section data-markdown>
+                    ### Delegatecall Proxy: Recommendations
+                    - **Use same compiler version**
+                     - Solidity could have better optimizations
+                    - **Be careful with correct contract initializatione**
+                     - Constructors cannot be used
+                    - **Inspect the generated EVM code manually**
+                     - No mature tool can validate the memory layout
+                </section>
+
+                <section data-markdown>
+                    ### Delegatecall Proxy: Recommendations
+                    - **Define the upgrade procedure**
+                     - How to upgrade the contracts?
+                     - How to store keys?
+                     - how to communicate with users?
+                </section>
+
+                <section data-markdown>
+                    ### Upgradability: Takeaways
+                    - **Allow to patch the contracts**
+                    - **Drawbacks for developers:**
+                     - Increase code size and complexity
+                     - Require extra knowledge
+                     - Increase number of keys
+                     - Encourage solving problems after deployments
+                    - **Drawbacks for users:**
+                     - Increase gas cost
+                     - Prevent trustless system
+                </section>
+
+                <section data-markdown>
+                    ### Upgradability: recommendations
+                    - **Be careful when choosing features of your contract**
+                    - **Strive for the simplest solution**
+                     - Use data separation over delegatecall
+                    - **Don't add upgradability at the end of our development process**
+                </section>
+
+                <section>
+                    <h2>Alternative?</h2>
+                    <h2>Contract Migration</h2>
+                </section>
+
+                <section data-markdown>
+                    ### Contract Migration
+                    - Copy variables from the contract to a new version
+                </section>
+
+                <section data-markdown>
+                    ### Why do you need a Migration?
+                    - **To upgrade non-upgradable contracts**
+                    - **To recover from a compromise**
+                     - Contract compromise
+                     - Key(s) compromise
+                    - **To recover from incorrect setup**
+                     - owner = 0
+                </section>
+
+                <section data-markdown>
+                    ### How to perform a migration>
+                    1. **Data recovery: Collect the values of the variables**
+                     - Use Events
+                    2. **Data writing: Deploy and initiate the new contract**
+                    - Use an initialization state
+                    - Migration 300.000 balances = $7,500 in October
+                </section>
+
+                <section data-markdown>
+                    ### Migration versus Upgradability
+                    - **Migration covers most of the benefits of upgradability**
+                    - **Arguments for migration:**
+                     - Simple than upgradability
+                     - No additional code
+                     - No additional key
+                     - No additional trust from the user
+                     - No additional cost for users
+                    Upgradable contracts also need a migration procedure
+                </section>
+
+                <section data-markdown>
+                    ### Migration versus Upgradability
+                    - **Argumments for upgradability**
+                     - **Frequent update (cost of migration)**
+                      - One migration is cheap (read this [blog](https://blog.trailofbits.com/2018/10/29/how-contract-migration-works/))
+                     - Fixed address required
+                </section>
+
+                <section>
+                    <h2>Recommended smart contract design patterns</h2>
+                </section>
+
+                <section>
+                    <h3>Recommended smart contract design patterns</h3>
+                    <p>While writing a smart contract there are some known design patterns that are recommended</p>
+                    <ul>
+                        <li>External call</li>
+                        <li>On-Chain Data is Public Data!</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>External call</h3>
+                    <p>Be very careful when making calls to other contracts as they can expose you to several unexpected risks or errors.</p>
+                </section>
+
+                <section>
+                    <h3>External call</h3>
+                    <p>Makes an untrusted contract</p>
+                    <ul>
+                        <li>Name variables and contract interfaces in a way that makes it clear that interacting with them is potentially unsafe i.e. <code>makeWithdrawl()</code> and <code>makeUntrustedWithdrwal()</code>.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>External call</h3>
+                    <p>Avoid state changes after external call</p>
+                    <ul>
+                        <li>Contract A calls Contract B, Contract B is clean but it calls Contract C which contains malicious code, therefore Contract A is at risk.</li>
+                        <li>Malicious code can force race conditions by altering control flow of the contract.</li>
+                        <li>Use <a href="https://solidity.readthedocs.io/en/develop/security-considerations.html?#use-the-checks-effects-interactions-pattern" target="_blank">checks-effects-interactions</a> pattern</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>External call</h3>
+                    <p>Understand the trade-offs between <code>.send()</code>, <code>.transfer()</code>, and <code>call.value()</code></p>
+                    <ul>
+                        <li><code>.send()</code> and <code>.transfer()</code> are considered safe against reentrancy.</li>
+                        <li><code>.send()</code> and <code>.transfer()</code> are incompatiable with any contract whose fallback function requires more than 2,300 gas(block gas stipend).</li>
+                        <ul>
+                            <li>This can be remedied by using a <a href="https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-for-external-calls" target="_blank">pull over pull mechanism</a>.</li>
+                        </ul>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>External call</h3>
+                    <p>Favor pull over push for external calls</p>
+                    <ul>
+                        <li>In the case of payments this would allow users to withdraw funds rather than having funds pushed to them automatically.</li>
+                        <li>Avoid using multiple <code>.send()</code> calls in a single transaction.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>On-chain data is public!</h3>
+                    <p>Favor pull over push for external calls</p>
+                    <ul>
+                        <li>Private data might not be exposed during a specific amount of time i.e. Rock-Paper-Scissors.</li>
+                        <li>In the case of RPS, a hash of the players move is submitted to the contract but not the blockchain, then when the time is right, the players reveal their moves. If the move the player submitted to the contract does not match their revealed move the answer is thrown out and the player is disqualified.</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2>Smart Contract Best practices</h2>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Contrary to most Software Engineering enviroments smart contracts are hard to change and have a high cost of failure.</p>
+                        <p>The best approach is to move slowly and carefully</p>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Bugs are inevitable, so prepare for them.</p>
+                        <ul>
+                            <li>Leverage Circuit Breaker design pattern e.g. <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20Pausable.sol" target="_blank"><code>ERC20Pausable.sol</code></a></li>
+                            <li>Manage the amount at risk with rate limits or caps e.g. <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20Capped.sol" target="_blank"><code>ERC20Capped.sol</code></a></li>
+                            <li>Setup effective upgrade path for bug fixes and updates.</li>
+                        </ul>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Roll out with caution.</p>
+                        <ul>
+                            <li>Take advantage of bug bounties and testing tools</li>
+                            <li>Get contracts audited by 3rd parties</li>
+                        </ul>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>When possible opt for less complexity, as this usually leads to less bugs.</p>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Use audited / hardened code whenever possible.</p>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Write code that is human readable.</p>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Only use the blockchain when necessary.</p>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Understand the environment.</p>
+                    <ul>
+                        <li>Be cautious when calling external contracts</li>
+                        <li>Contract functions are public and can be called in ways that arent intended.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Rigidity versus Upgradability.</p>
+                    <ul>
+                        <li>Upgradability is great from an engineering perspective but amplifies the amount of vulnerabilities in code.</li>
+                        <li>Contracts that have a defined lifespan and are relatively simple, upgradability is likely not a concern.</li>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Monolithic versus Modular</p>
+                    <ul>
+                        <li>Self contained contracts make reviewing the contract much easier.</li>
+                        <li>Modular code is typically easier to maintain from and engineering standpoint.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Smart contract Best practices</h3>
+                    <p>Code Duplication versus Reuse</p>
+                    <ul>
+                        <li>Whenever possible use hardened, proven code rather than rolling your own.</li>
+                    </ul>
+                </section>
+
+				<section data-markdown><textarea data-template>
+					## Proxy Pattern demo
+					- The <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-patterns-best-practices/demo/proxy-pattern" target="_blank">demo</a> contains an example of proxy pattern.
+				</textarea></section>
+
+				<section>
+					<h3>Lab - Upgradability</h3>
+					Follow the instructions on the <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-patterns-best-practices/lab/upgradability#readme" target="_blank">readme</a> file
+				</section>
+
+				<section>
+					<h3>References</h3>
+					<ul>
+						<li><a href="https://github.com/dhruvinparikh93/ethereumbook/" target="_blank">Ethereumbook</a></li>
+						<li><a href="https://web3js.readthedocs.io/en/v1.2.9/" target="_blank">Software engineering techniques</a></li>
+                        <li><a href="https://github.com/GeorgeBrownCollege-Toronto/ConsenSys-Academy-Notes/blob/master/Part%208%20-%20Smart%20Contracts%20Pitfalls%2C%20Testing%20and%20Debugging.md#smart-contract-best-practices" target="_blank">Consensys notes</a></li>
+                        <li><a href="https://blog.trailofbits.com/2018/09/05/contract-upgrade-anti-patterns/" target="_blank">Contract upgrade anti-pattern</a></li>
+                        <li><a href="https://blog.trailofbits.com/2018/10/29/how-contract-migration-works/" target="_blank">How migrations works?</a></li>
+					</ul>
+				</section>
+
+				<section data-markdown><textarea data-template>
+
+					## End
+					
+				</textarea></section>
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+	</body>
+</html>
