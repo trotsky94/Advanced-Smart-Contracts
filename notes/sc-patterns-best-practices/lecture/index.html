@@ -105,7 +105,7 @@
                 </section>
 
                 <section>
-                    <h2>Upgradability</h2>
+                    <h2>Upgradeability</h2>
                 </section>
 
                 <section>
@@ -136,8 +136,8 @@
                 </section>
 
                 <section>
-                    <h3>Contract Upgradability</h3>
-                    <p>Add upgrability capacity with two main strategies</p>
+                    <h3>Contract Upgradeability</h3>
+                    <p>Add upgradeability capacity with two main strategies</p>
                     <ul>
                         <li>Data Separation</li>
                         <li>Delegatecall Proxy</li>
@@ -311,7 +311,7 @@
                 </section>
 
                 <section data-markdown>
-                    ### Upgradability through delegatecall
+                    ### Upgradeability through delegatecall
                     - **Two contracts:**
                      - Proxy contracts: holds data: (immutable)
                      - Logic: holds the logic (mutable)
@@ -321,7 +321,7 @@
                 </section>
 
                 <section data-markdown>
-                    ### Upgradability through delegatecall
+                    ### Upgradeability through delegatecall
                     - **Upgrade: change the logic contract**
                     - **Each version of the logic contract must follo the same memory layout**
                      - Do you know precisely how Solidity store variables in memory?
@@ -470,7 +470,7 @@
                 </section>
 
                 <section data-markdown>
-                    ### Upgradability: Takeaways
+                    ### Upgradeability: Takeaways
                     - **Allow to patch the contracts**
                     - **Drawbacks for developers:**
                      - Increase code size and complexity
@@ -483,11 +483,11 @@
                 </section>
 
                 <section data-markdown>
-                    ### Upgradability: recommendations
+                    ### Upgradeability: recommendations
                     - **Be careful when choosing features of your contract**
                     - **Strive for the simplest solution**
                      - Use data separation over delegatecall
-                    - **Don't add upgradability at the end of our development process**
+                    - **Don't add Upgradeability at the end of our development process**
                 </section>
 
                 <section>
@@ -520,10 +520,10 @@
                 </section>
 
                 <section data-markdown>
-                    ### Migration versus Upgradability
-                    - **Migration covers most of the benefits of upgradability**
+                    ### Migration versus Upgradeability
+                    - **Migration covers most of the benefits of Upgradeability**
                     - **Arguments for migration:**
-                     - Simple than upgradability
+                     - Simple than Upgradeability
                      - No additional code
                      - No additional key
                      - No additional trust from the user
@@ -532,8 +532,8 @@
                 </section>
 
                 <section data-markdown>
-                    ### Migration versus Upgradability
-                    - **Argumments for upgradability**
+                    ### Migration versus Upgradeability
+                    - **Argumments for Upgradeability**
                      - **Frequent update (cost of migration)**
                       - One migration is cheap (read this [blog](https://blog.trailofbits.com/2018/10/29/how-contract-migration-works/))
                      - Fixed address required
@@ -665,10 +665,10 @@
 
                 <section>
                     <h3>Smart contract Best practices</h3>
-                    <p>Rigidity versus Upgradability.</p>
+                    <p>Rigidity versus Upgradeability.</p>
                     <ul>
-                        <li>Upgradability is great from an engineering perspective but amplifies the amount of vulnerabilities in code.</li>
-                        <li>Contracts that have a defined lifespan and are relatively simple, upgradability is likely not a concern.</li>
+                        <li>Upgradeability is great from an engineering perspective but amplifies the amount of vulnerabilities in code.</li>
+                        <li>Contracts that have a defined lifespan and are relatively simple, Upgradeability is likely not a concern.</li>
                 </section>
 
                 <section>
@@ -694,8 +694,8 @@
 				</textarea></section>
 
 				<section>
-					<h3>Lab - Upgradability</h3>
-					Follow the instructions on the <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-patterns-best-practices/lab/upgradability#readme" target="_blank">readme</a> file
+					<h3>Lab - Upgradeability</h3>
+					Follow the instructions on the <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/sc-patterns-best-practices/lab/Upgradability#readme" target="_blank">readme</a> file
 				</section>
 
 				<section>
