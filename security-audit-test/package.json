@@ -1,0 +1,24 @@
+{
+  "name": "security-audit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/issues"
+  },
+  "homepage": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/security-audit-test#readme",
+  "devDependencies": {
+    "bn.js": "^5.1.2",
+    "truffle": "^5.1.36"
+  }
+}
