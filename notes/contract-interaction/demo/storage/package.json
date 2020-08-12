@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test",
+    "lint": "solium -c ./.soliumrc.json -d ./contracts"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,15 @@
   "homepage": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/demo/storage#readme",
   "dependencies": {
     "ethers": "^4.0.45",
+    "ethlint": "^1.2.5",
     "truffle": "^5.1.16"
+  },
+  "devDependencies": {
+    "husky": "^4.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   }
 }
