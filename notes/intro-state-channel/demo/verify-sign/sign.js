@@ -16,10 +16,10 @@ async function signPayment(recipient, amount, nonce, contractAddress) {
 }
 
 signPayment(
-"0xCeea82AA4e740e3820A3f69301AF9afA31D06728",
-web3.utils.toWei("1","ether"),
-  2,
-  "0x09557807C515d758ECc5E1D1aCE7D09aA5842F51"
+"0xDa1d30af457b8386083C66c9Df7A86269bEbFDF8",
+5000000000,
+  0,
+  "0x0ED8f92224E590f827Bf00D0F32CDFa7cDcB4f5b"
 ).then((message) => {
   console.log(message);
   const sKey =
