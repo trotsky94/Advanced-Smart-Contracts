@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Assembly Part 3</title>
+
+		<link rel="stylesheet" href="../../reveal.js/css/reset.css">
+		<link rel="stylesheet" href="../../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../../css/main.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../../reveal.js/lib/css/monokai.css">
+		
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../../reveal.js/css/print/pdf.css' : '../../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown><textarea data-template>
+					### Solidity Assembly (Part 3)
+					#### Advanced Smart Contract
+					<div class="author">Yuet Loo Wong</div>
+				</textarea></section>
+				<section data-markdown><textarea data-template>
+          ### Topics
+          - Assembly
+            - Memory Array
+            - Storage Array
+            - Mappings
+            - Contract Code
+
+				</textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ## Memory Array
+          - <span class="highlight">memory</span> keyword
+          -
+          ```
+          function Hello(uint[] memory input)
+          public pure returns(uint[] memory output) {   
+            bool[] memory boolArray;
+            return input;
+          }
+          ```
+					</textarea>
+				</section>
+
+				<section data-markdown><textarea data-template>
+          ## Array Memory Layout
+          - Elements in arrays occupy multiples of 32 bytes
+            - except for <span class="highlight">string</span> and <span class="highlight">bytes</span> 
+          - Dynamic array 
+            - the length is stored in the first slot
+            - elements are stored in the following slots
+				</textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Dynamic Memory Array
+          - length stored in the first slot
+          ```
+          function getLength(uint[] memory input)       
+            public pure returns(bytes32 result) 
+            {
+              assembly {
+                result := mload(input)
+              }
+            }
+          ```
+        </textarea></section>
+
+
+        <section data-markdown><textarea data-template>
+          ### Fixed Length Memory Array
+          - elements start in the first slot
+          - subsequent slots will be filled if first slot is full
+          -
+          ```
+          function getFirstElement( byte[3] memory data )     
+            public pure returns(bytes32) {
+            assembly {
+                mstore(0, mload(data))
+                return(0,32)
+            }
+          }
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### String and Bytes in Memory
+          - length in first slot
+          - elements start in second slot
+          - elements are tightly packed
+          - each element do not occupy 32 bytes 
+          -
+          ```
+          function getFirstElement( bytes memory data )     
+            public pure returns(bytes32) {
+            assembly {
+                mstore(0, mload(add(data,32)))
+                return(0,32)
+            }
+          }
+          ```
+        </textarea></section>
+        
+        <section data-markdown><textarea data-template>
+          ## Multi-dimensional Memory Array
+          - length is stored in the first slot
+          - subsequent slots store pointers to memory arrays
+          -
+          ```
+          function get2DArrayLength(  )     
+            public pure returns(bytes32) {
+                uint size = 3;
+                uint8[][] memory data = new uint8[][](size);    
+                for(uint i = 0; i < size; i++) {
+                  data[i] = new uint8[](4);
+                  data[i][0] = 88;
+                }     
+                assembly {
+                  mstore(0, mload(data))
+                  return(0, 32)
+                }
+            }
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ## Array in Storage
+          - array state variables
+          -
+          ```
+          contract Sample {
+              uint[] array;      // storage slot 0
+              bool[1] boolArray; // storage slot 1    
+          }
+          ```
+
+       </textarea></section>
+
+        <section data-markdown><textarea data-template>
+            ### Dynamic Array Storage Layout
+            - the array length is in the storage slot 'p'
+            - the nth-element is in slot: keccak256(p) + n
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Dynamic Array Storage Example
+          - <a href="https://github.com/yuetloo/EthereumSmartContracts/blob/master/DynamicArrayStorage.sol">Github Source</a>
+          ```
+          contract DynamicArrayStorage {
+              struct Store { uint8 x; uint8 y; }
+              Store[] data;            
+              constructor() public {
+                  data.push(Store(0x22, 0x33));
+              }
+              function getData(uint slot) public view returns (bytes32 result) {
+                assembly {
+                  mstore(0, data_slot)
+                  result := sload(add(keccak256(0,0x20),slot))
+                }        
+              }
+          }
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Dynamic Array Vunerability
+          - Doug Hoyte's <a href="https://github.com/Arachnid/uscc/tree/master/submissions-2017/doughoyte" target="_blank">Underhanded Solidity Contest</a>  Winning Submission
+          -
+          ```
+          contract MerdeToken {
+            address public owner;
+            uint[] public bonusCodes;
+            constructor() public {
+                owner = msg.sender; 
+                bonusCodes.length--;
+            }
+            function modifyBonusCode(uint index, uint update) public {
+                require(index < bonusCodes.length);
+                bonusCodes[index] = update;
+            }
+          }
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Array Index Exercise
+          - How to change the <span class="highlight">owner</span> value in previous example?
+          - Hints:
+            - use modifyBonusCode()
+            - for an array at storage slot p, its data is stored at:
+              - x = keccak256(p)
+            - maximum storage index = n = 2^256 - 1
+            - last array index i = n - x
+            - array index j wraps around and end up at slot k
+              - j = n - x + k
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Solidity v0.6
+          - <a href="https://solidity.readthedocs.io/en/v0.6.2/060-breaking-changes.html#solidity-v0-6-0-breaking-changes" target="_blank">Breaking changes</a>
+          - Array length is read only: <a href="https://github.com/ethereum/solidity/issues/3515" target="_blank">issue 3515</a>
+            - array.length-- is not allowed
+          - Use pop() to remove array element
+          - Fix issue related to array length manipulation
+        </textarea></section>
+
+        <section>
+          <h3>Mapping</h3>
+            <code>
+              mapping (address=>uint) balances;
+            </code>          
+        </section>
+
+        <section data-markdown><textarea data-template>
+          ### Mapping Storage Layout
+          - the value for a mapping key k is located at:
+            - keccak256(k . p)
+            - where "." is concatenation
+            - p is the storage slot of the mapping
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Mapping Example
+          ```
+contract Account {
+  mapping (address=>uint) balances;
+  constructor() public {
+    balances[0xe90f4F8aeBa3AdE774CaC94245792085a451bC8E] = 0x45;
+    balances[0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c] = 0x67;
+  }
+  function GetBalance(address addr) public view returns(bytes32 output) {
+      assembly {
+        mstore(0, addr)
+        mstore(0x20, balances_slot)
+        output := sload(keccak256(0, 0x40))
+      }
+  }
+}
+          ```
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Bytes and String in Storage
+          - short (data less than 32 bytes)
+            - data is in the same slot as the length
+            - lowest-order byte stores length * 2
+          - long (data more than 31 bytes)
+            - first slot stores length * 2 + 1
+          - last bit is set if data is longer than 31 bytes
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Bytes in Storage Example
+          ```
+          bytes bytesData = "aabbcc";
+          function getBytes() public view returns(bytes32) {
+              assembly {
+                  mstore(0, sload(bytesData_slot))
+                  return(0, 32)
+              }
+          }
+          ```
+        </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					## Lab
+					Following the instructions on the readme file of <a href="https://github.com/ethereumgb/assembly-array" target="_blank">assembly-array</a>
+					</textarea>
+				</section>
+			</div>
+		</div>
+
+		<script src="../../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				width: "100%",
+				margin: 0,
+				maxScale: 0.9,
+				hash: true,
+				slideNumber: 'c/t',
+				dependencies: [
+					{ src: '../../reveal.js/plugin/markdown/marked.js'},
+					{ src: '../../reveal.js/plugin/markdown/markdown.js'},
+					{ src: '../../reveal.js/plugin/highlight/highlight.js' },
+					{ src: '../../reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
