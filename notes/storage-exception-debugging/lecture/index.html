@@ -1,0 +1,306 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<title>Accessing storage, Exception handling and Debugging in Smart contract</title>
+
+		<meta name="description" content="A lesson on various ways of contract interaction">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/solarized.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+		<style>
+			.reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        		text-transform: none;
+     	 	}
+
+      		.two-column {
+        		display: flex;
+        		flex-wrap: wrap;
+      		}
+
+      		.two-column em {
+        		margin: 20px;
+      		}
+
+      		.reveal .big-and-bold {
+        		font-weight: bold;
+        		font-size: 135%;
+      		}
+
+      		.reveal .shrunk-a-bit {
+        		font-size: 90%;
+      		}
+
+			.reveal .shrunk-a-bit pre {
+       	 		width: 100%;
+      		}
+
+			.reveal pre {
+        		width: 100%;
+      		}
+
+      		.reveal .highlight {
+        		color: gray;
+        		font-weight: bold;
+      		}
+
+      		.reveal .highlightRed {
+        		color: red;
+        		font-weight: bold;
+      		}
+
+      		.reveal .highlightGreen {
+        		color: green;
+        	font-weight: bold;
+      		}
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			 <div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contracts 
+						#### Accessing storage, Exception handling and Debugging 
+						<div class="author">Dhruvin Parikh, March 2021</div>
+					</textarea>
+				</section>
+			<section data-markdown><textarea data-template>
+					## Topics
+					* Ethereum Smart Contract Storage
+					* `try/catch`
+					* Debugging Ethereum transactions
+				</textarea></section>
+
+				<section>
+					<h3>Smart contract Storage</h3>
+					<ul>
+						<li>This is where state variables are stored</li>
+						<li>It is persistent between function calls and transactions</li>
+						<li>It is a key-value mapping of 2<sup>256</sup> keys; each value is 32 bytes long</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>State Variables Storage Layout</h3>
+					<ul>
+						<li>One Astronomically large array</li>
+						<li>Solidity generates code that saves variable values in their declaration order.</li>
+						<li>Variable <span class="highlight">first</span> was declared first, it’s stored in slot 0</li>
+                                  		<li>Items that need less than 32 bytes are packed together. <a href="https://docs.soliditylang.org/en/v0.8.2/internals/layout_in_storage.html#layout-of-state-variables-in-storage" target="_blank"> See Rules</a></li>
+					</ul>
+					<pre><code data-trim>
+						contract Sample {
+							uint first;    // storage slot 0
+							uint second;   // storage slot 1
+						}
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Astronomically large array mental model</h3>
+					<img src="storage.png">
+				</section>
+
+				<section data-markdown><textarea data-template>
+					### Fixed-Sized Variables storage layout
+					```js
+					contract StorageTest {
+						uint256 a;	// slot 0. (location = slot)
+						uint256[2] b; // slots 1,2
+					
+						struct Entry { 
+							uint256 id; // slot 3
+							uint256 value; // slot 4
+						}
+						Entry c; // slots 3,4
+					}
+					```
+					<img src="fixed.png" width=400>
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Dynamic-Sized Variables storage layout
+					```js
+					contract StorageTest {
+						uint256 a;     // slot 0
+						uint256[2] b;  // slots 1-2
+					
+						struct Entry {
+							uint256 id;
+							uint256 value;
+						}
+						Entry c;       // slots 3-4
+						Entry[] d;
+					}
+					```
+					<img src="dynamic.png" width=400>
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Dynamic-Sized Variables storage layout
+					* Computing the location of an element of a dynamically-sized array:
+					```js
+					function arrLocation(uint256 slot, uint256 index, uint256 elementSize) 
+					public pure returns (uint256) {
+						return uint256(keccak256(slot)) + (index * elementSize);
+					}
+					```
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Mapping storage layout
+					```js
+					contract StorageTest {
+						uint256 a;     // slot 0
+						uint256[2] b;  // slots 1-2
+					
+						struct Entry {
+							uint256 id;
+							uint256 value;
+						}
+						Entry c;       // slots 3-4
+						Entry[] d;     // slot 5 for length, keccak256(5)+ for data
+					
+						mapping(uint256 => uint256) e;
+						mapping(uint256 => uint256) f;
+					}
+					```
+					<img src="mapping.png" width=400>
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Mapping storage layout
+					* Computing the location of a value given slot and key:
+					```js
+					function mapLocation(uint256 slot, uint256 key) 
+					public pure returns (uint256) {
+						return uint256(keccak256(key, slot));
+					}
+					```
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Complex types storage layout
+					```js
+					contract StorageTest {
+						uint256 a;     // slot 0
+						uint256[2] b;  // slots 1-2
+						struct Entry {
+							uint256 id;
+							uint256 value;
+						}
+						Entry c;       // slots 3-4
+						Entry[] d;     // slot 5 for length, keccak256(5)+ for data
+					
+						mapping(uint256 => uint256) e;    // slot 6, data at h(k . 6)
+						mapping(uint256 => uint256) f;    // slot 7, data at h(k . 7)
+						mapping(uint256 => uint256[]) g;  // slot 8
+						mapping(uint256 => uint256)[] h;  // slot 9
+					}
+					```
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Complex types storage layout
+					* To find `g[123][0]` :
+					```js
+					function mapLocation(uint256 slot, uint256 key) 
+					public pure returns (uint256) {
+						return uint256(keccak256(key, slot));
+					}
+					function arrLocation(uint256 slot, uint256 index, uint256 elementSize) 
+					public pure returns (uint256) {
+						return uint256(keccak256(slot)) + (index * elementSize);
+					}
+					// first find arr = g[123]
+					arrLoc = mapLocation(8, 123);  // g is at slot 8
+					// then find arr[0]
+					itemLoc = arrLocation(arrLoc, 0, 1);
+					```
+                </textarea></section>
+
+				<section data-markdown><textarea data-template>
+					### Complex types storage layout
+					* To find `h[2][456]` :
+					```js
+					function mapLocation(uint256 slot, uint256 key) 
+					public pure returns (uint256) {
+						return uint256(keccak256(key, slot));
+					}
+					function arrLocation(uint256 slot, uint256 index, uint256 elementSize) 
+					public pure returns (uint256) {
+						return uint256(keccak256(slot)) + (index * elementSize);
+					}
+					// first find map = h[2]
+					mapLoc = arrLocation(9, 2, 1);  // h is at slot 9
+					// then find map[456]
+					itemLoc = mapLocation(mapLoc, 456);
+					```
+                </textarea></section>
+                
+				<section data-markdown><textarea data-template>
+					### Packed Storage
+					![Storage Layout](./storage.svg "Storage Layout")
+                </textarea></section>
+				
+				<section data-markdown><textarea data-template>
+					### Storage Demo
+					- <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/demo/storage" target="_blank">Sample Contract</a>
+					- call the delegator.setVersion() with value 0xaabbcc
+					- check the values of val1,val2,val3,val4
+					- use storageAt() to get the storage value
+					- <a href="https://medium.com/aigang-network/how-to-read-ethereum-contract-storage-44252c8af925" target="_blank">How to read Ethereum contract storage</a>
+
+                </textarea></section>
+
+				<section>
+					<h3>Lab</h3>
+					Follow the instructions on the readme file of <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/lab/proxy-delegate" target="_blank">proxy-delegate</a>
+				</section>
+
+				<section data-markdown><textarea data-template>
+
+					## End
+					
+				</textarea></section>
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+				history: true,
+
+				transition: 'none', // none/fade/slide/convex/concave/zoom
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+	</body>
+</html>

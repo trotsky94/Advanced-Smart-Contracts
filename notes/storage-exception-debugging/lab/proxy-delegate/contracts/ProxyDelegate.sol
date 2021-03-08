@@ -1,4 +1,6 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.7.0 <=0.8.1;
 
 contract ProxyDelegate {
     address public owner;
@@ -6,12 +8,12 @@ contract ProxyDelegate {
 
     event LogResult(bytes result);
 
-    constructor(address delegateAddress) public {
+    constructor(address delegateAddress) {
         owner = msg.sender;
         delegate = delegateAddress;
     }
 
-    function() external {
+    fallback() external {
         (bool success, bytes memory returnData) = delegate.delegatecall(msg.data);
         require(success, "external call failed");
         emit LogResult(returnData);

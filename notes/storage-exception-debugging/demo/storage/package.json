@@ -19,12 +19,12 @@
   },
   "homepage": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/demo/storage#readme",
   "dependencies": {
-    "ethers": "^4.0.45",
+    "ethers": "^5.0.31",
     "ethlint": "^1.2.5",
-    "truffle": "^5.1.16"
+    "truffle": "^5.2.3"
   },
   "devDependencies": {
-    "husky": "^4.2.5"
+    "husky": "^5.1.3"
   },
   "husky": {
     "hooks": {

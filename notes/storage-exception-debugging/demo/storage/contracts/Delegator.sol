@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >0.4.0 <0.7.0;
+
+pragma solidity >=0.7.0 <=0.8.1;
 
 contract Delegator {
     bytes1 public val1;   // storage slot 0
@@ -12,7 +13,7 @@ contract Delegator {
 
     event LogResult(bytes result);
 
-    constructor(address delegateAddress) public {
+    constructor(address delegateAddress) {
         owner = msg.sender;
         delegate = delegateAddress;
     }

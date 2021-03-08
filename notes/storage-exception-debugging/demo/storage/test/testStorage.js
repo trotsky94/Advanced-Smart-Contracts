@@ -1,6 +1,6 @@
 const Delegator = artifacts.require('Delegator');
 const VersionLibrary = artifacts.require('VersionLibrary');
-const ethers = require("ethers");
+// const ethers = require("ethers");
 
 contract("ProxyDelegate", accounts => {
     let proxy;
@@ -15,7 +15,7 @@ contract("ProxyDelegate", accounts => {
         const version = 0xaabbccddeeff;
         return proxy.setVersion(version).then(tx => { 
              return web3.eth.getStorageAt(proxy.address, 2).then(result => {
-               const checksumAddress = ethers.utils.getAddress(result);
+               const checksumAddress = web3.utils.toChecksumAddress(result);
                assert.equal(checksumAddress, owner, "owner mismatch");
              });
           });

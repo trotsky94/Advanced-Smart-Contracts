@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/contract-interaction/lab/proxy-delegate#readme",
   "devDependencies": {
-    "bn.js": "^5.1.1",
-    "ethers": "^4.0.45",
-    "truffle": "^5.1.16",
+    "bn.js": "^5.2.0",
+    "ethers": "^5.0.31",
+    "truffle": "^5.2.3",
     "truffle-assertions": "^0.9.2"
   }
 }
