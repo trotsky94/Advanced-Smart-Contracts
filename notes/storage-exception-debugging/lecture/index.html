@@ -378,7 +378,7 @@
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
-				### `try/catch`(5)
+				### `try/catch`(6)
 				* revert-style exception (`require` or `revert`) error signature matches <span class="highlightRed">`catch Error`</span> block.
 				<pre class="hljs">
 				contract TryCatcher {
@@ -400,7 +400,7 @@
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
-				### `try/catch`(6)
+				### `try/catch`(7)
 				* assert-style exception (`assert`) error signature  matches <span class="highlightRed">`catch`</span> block
 				<pre class="hljs">
 				contract TryCatcher {
@@ -419,6 +419,97 @@
 					}
 				}
 				</pre>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(8)
+				* error like overflow/underflow matches <span class="highlightRed">`catch Panic()`</span> block
+				<pre class="hljs">
+				contract TryCatcher {
+					event PanicErrorEvent(uint errorCode);
+					event CatchStringEvent(string someString);
+					event SuccessEvent();
+					// ...
+					function execute() public {
+						try externalContract.someFunction() {
+							emit SuccessEvent();
+						} catch Error(string memory revertReason) {
+							emit CatchStringEvent(revertReason);
+						} <span class="highlightRed">catch Panic(uint errorCode) {
+							emit PanicErrorEvent(errorCode);
+						}</span>
+					}
+				}
+				</pre>
+				</textarea></section>
+
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(Panic codes)
+				1. **`0x01`**: assert evaluates to false.
+				2. **`0x11`**: underflow/overflow.
+				3. **`0x12`**: e.g. `5/0` or `23%0`.
+				4. **`0x21`**: Converting a value that is too big or negative into an enum type.
+				5. **`0x31`**: Call `.pop()` on an empty array.
+				6. **`0x32`**: bytesN or an array slice at an out-of-bounds or negative index (i.e. x[i] where i >= x.length or i < 0).
+				7. **`0x41`**: too much memory or create large array.
+				8. **`0x51`**: zero-initialized variable of internal function type.
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Truffle debugger
+				* Not debugging code in real-time.
+				* Step over the historical execution of that transaction.
+				* Mapping that execution onto its associated code. 
+				* Debug any transaction given all artifacts, code & ABI. 
+				```
+				truffle debug \transaction hash\
+				```
+
+				</textarea></section>
+
+
+				<section data-markdown><textarea data-template>
+				### Debugging Error (An Infinite loop)
+				```
+				function set(uint x) public {
+					while(true) {
+					  myVariable = x;
+					}
+				}
+				```
+				<pre class="hljs">
+					Error: VM Exception while processing transaction: out of gas
+				</pre>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Debugging Error (An Infinite Error check)
+				```
+				function set(uint x) public {
+					assert(x == 0);
+					myVariable = x;
+				}
+				```
+				<pre class="hljs">
+					Error: VM Exception while processing transaction: invalid opcode
+				</pre>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Debugging Error (A function isn't operating as desired)
+				```
+				event Odd();
+				event Even();
+				function set(uint x) public {
+					myVariable = x;
+					if (x % 2 == 0) {
+						emit Odd();
+					} else {
+						emit Even();
+					}
+				}
+				```
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
