@@ -271,6 +271,157 @@
 				</section>
 
 				<section data-markdown><textarea data-template>
+				### Old way to `try/catch`
+				```
+				function execute(uint256 amount) external {
+					// the low level call will return `false` if its execution reverts
+					(bool success, bytes memory returnData) = address(this).call(
+						abi.encodeWithSignature("onlyEven(uint256)",amount)
+					);
+					if (success) { /*handle success*/ } 
+					else { /*handle exception*/ }
+				}
+			
+				function onlyEven(uint256 a) public {
+					// Code that can revert
+					require(a % 2 == 0, "Ups! Reverting");
+					// ...
+				}
+				```
+				* Changes applied before/after the call are not rolled back here. 
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch` (1)
+				* Handle external call failures
+				* React on failed external calls and contract creation.
+				* Cannot be used for internal function calls
+				* Call public function with <span class="highlightRed">`this`</span> to make it external.
+				* Eventual `out of gas` error is caught by the low-level `catch` clause. 
+				* `out of gas` error is not caught if transaction executing code runs out of gas.
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(2)
+				* following revert inside the try success block will revert the transaction:
+				```
+				function execute() public {
+					try externalContract.someFunction() {
+						// this will revert the execution of the transaction
+						// even if the external call succeeded
+						revert();
+					} catch {
+					   // ...
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(3)
+				* Constructor calls
+				```
+				contract TryCatcher {
+					// ...
+					function execute() public {
+						try new CalledContract() returns(CalledContract returnedInstance) {
+							// returnedInstance can be used to obtain the 
+							// address of the newly deployed contract
+							emit SuccessEvent();
+						} catch {
+							emit CatchEvent();
+						}
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(4)
+				* External calls
+				```
+				contract CalledContract {    
+					function getTwo() public returns (uint256) {
+						return 2;
+					}
+				}
+				contract TryCatcher {
+					CalledContract public externalContract;
+					function execute() public returns (uint256, bool) {
+						try externalContract.getTwo() returns (uint256 v) {
+							uint256 newValue = v + 2;
+							return (newValue, true);
+						} catch {
+							emit CatchEvent();
+						}		
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(5)
+				* Use returned data inside catch statement
+				```
+				contract TryCatcher {
+					event ReturnDataEvent(bytes someData);
+					// ...
+					function execute() public returns (uint256, bool) {
+						try externalContract.someFunction() {
+							// ...
+						} catch (bytes memory returnData) {            
+							emit ReturnDataEvent(returnData);
+						}
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(5)
+				* revert-style exception (`require` or `revert`) error signature matches <span class="highlightRed">`catch Error`</span> block.
+				<pre class="hljs">
+				contract TryCatcher {
+					event ReturnDataEvent(bytes someData);
+					event CatchStringEvent(string someString);
+					event SuccessEvent();
+					// ...
+					function execute() public {
+						try externalContract.someFunction() {
+							emit SuccessEvent();
+						} <span class="highlightRed">catch Error(string memory revertReason) {
+							emit CatchStringEvent(revertReason);
+						}</span> catch (bytes memory returnData) {
+							emit ReturnDataEvent(returnData);
+						}
+					}
+				}
+			    </pre>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### `try/catch`(6)
+				* assert-style exception (`assert`) error signature  matches <span class="highlightRed">`catch`</span> block
+				<pre class="hljs">
+				contract TryCatcher {
+					event ReturnDataEvent(bytes someData);
+					event CatchStringEvent(string someString);
+					event SuccessEvent();
+					// ...
+					function execute() public {
+						try externalContract.someFunction() {
+							emit SuccessEvent();
+						} catch Error(string memory revertReason) {
+							emit CatchStringEvent(revertReason);
+						} <span class="highlightRed">catch (bytes memory returnData) {
+							emit ReturnDataEvent(returnData);
+						}</span>
+					}
+				}
+				</pre>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
 
 					## End
 					
