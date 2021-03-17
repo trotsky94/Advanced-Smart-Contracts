@@ -4,9 +4,24 @@
 ## Getting started
 
 Clone this repository
-
+* **Option 1**
 ```bash
-git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./proxy-delegate && cd ./proxy-delegate && git filter-branch --prune-empty --subdirectory-filter ./notes/contract-interaction/lab/proxy-delegate HEAD && rm -rf ./.git
+git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./proxy-delegate && \
+cd ./proxy-delegate && \
+git filter-branch --prune-empty --subdirectory-filter ./notes/storage-exception-debugging/lab/proxy-delegate HEAD && \ 
+rm -rf ./.git
+```
+* **Option 2**
+```
+mkdir proxy-delegate && \
+cd ./proxy-delegate && \ 
+git init && \ 
+git remote add origin -f https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git && \
+git sparse-checkout init && \
+git sparse-checkout set notes/storage-exception-debugging/lab/proxy-delegate && \
+git pull origin master && \ 
+mv notes/storage-exception-debugging/lab/proxy-delegate/* . && \
+rm -rf ./.git ./notes
 ```
 ^^^ Stack Overflow : [https://stackoverflow.com/a/11835214](https://stackoverflow.com/a/11835214)
 
