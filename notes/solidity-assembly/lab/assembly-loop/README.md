@@ -2,6 +2,7 @@
 
 Following the steps to complete this exercise:
 1. clone this project
+* **Option 1**
 ```bash
 git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./assembly-loop && \
 cd ./assembly-loop && \
@@ -9,6 +10,7 @@ git filter-branch --prune-empty --subdirectory-filter ./notes/solidity-assembly/
 rm -rf ./.git
 ```
 ^^^ Stack Overflow : [https://stackoverflow.com/a/11835214](https://stackoverflow.com/a/11835214)
+* **Option 2**
 ```
 mkdir assembly-loop && \
 cd ./assembly-loop && \ 
@@ -27,4 +29,4 @@ rm -rf ./.git ./notes
 5. fix the failed test case by updating the BitWise.sol contract
    - replace the logic in the countBitSetAsm() with inline assembly logic
 6. add a test case to verify the result for countBitSetAsm(0)
-7. commit your changes to github and submit your github url
+7. Zip the project and submit on black board. Do not zip with `node_modules`, you'll receive 0. (but you can re-submit)
