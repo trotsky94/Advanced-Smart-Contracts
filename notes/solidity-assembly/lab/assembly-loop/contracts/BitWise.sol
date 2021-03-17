@@ -11,7 +11,7 @@ contract BitWise {
     }
 
     function countBitSetAsm(uint8 data ) public pure returns (uint8 result) {
-        // replace this with inline assembly code
+        // replace line 15 with inline assembly code
         result = countBitSet(data);
     }
 }

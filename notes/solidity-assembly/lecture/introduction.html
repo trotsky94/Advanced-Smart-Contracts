@@ -19,6 +19,12 @@
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+		<style>
+			.reveal .highlightRed {
+        		color: red;
+        		font-weight: bold;
+      		}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -26,16 +32,16 @@
 				<section data-markdown><textarea data-template>
 					### BCDV 1013 - Advanced Smart Contract
 					#### Introduction to Solidity assembly
-					<div class="author">Dhruvin Parikh, July 2020</div>
+					<div class="author">Dhruvin Parikh, March 2021</div>
 				</textarea></section>
 				<section data-markdown><textarea data-template>
 					## Topics
-					- Solidity Inline Assembly
-						- Introduction
-						- Syntax
-						- Flow
-						- Opcodes
-						- Benefits
+					* Solidity Inline Assembly
+						* Introduction
+						* Syntax
+						* Flow
+						* Opcodes
+						* Benefits
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
@@ -48,28 +54,29 @@
 
 				<section>
 					<h2 data-id="code-title">Assembly block</h2>
+					<li>Marked by <span class="highlightRed">assembly { ... }</span></li>
 					<pre><code code class="hljs" data-trim data-line-numbers>
-						// Marked by assembly { ... }
-						pragma solidity ^0.6.1;
-						contract Hello {
-							function SayHi() {
-								assembly {
-									// assembly code here
-								}
+					pragma solidity ^0.6.1;
+					contract Hello {
+						function SayHi() {
+							assembly {
+							// assembly code here
 							}
 						}
+					}
 					</code></pre>
 				</section>
 
 				<section>
 					<h2 data-id="code-title">Comments</h2>
+					<li>Use the // or /* */ to denote comments</li>
 					<pre><code class="hljs" data-trim data-line-numbers>
-						assembly {
-							// this is a comment
-							/* this is a multiline 
-							*  comment
-							*/
-						}
+					assembly {
+						// this is a comment
+						/* this is a multiline 
+						*  comment
+						*/
+					}
 					</code></pre>
 				</section>
 
@@ -82,11 +89,11 @@
 						<li>Variable will be assigned 0 if not initialized</li>
 					</ul>	
 					<pre><code class="hljs" data-trim data-line-numbers>
-						assembly {
-							let x := 1
-							let y         // initialized to 0
-						}
-						// x and y not visible here
+					assembly {
+						let x := 1
+						let y // initialized to 0
+					}
+					// x and y not visible here
 					</code></pre>
 				</textarea></section>
 
@@ -97,11 +104,11 @@
 						<li>strings up to 32 characters</li>
 					</ul>
 					<pre><code class="hljs" data-trim data-line-numbers>
-						assembly {
-							let a := 2
-							let b := 0x03
-							let c := "hello world"
-						}
+					assembly {
+						let a := 2
+						let b := 0x03
+						let c := "hello world"
+					}
 					</code></pre>
 				</section>
 
@@ -141,15 +148,15 @@
 					<h3>Switch</h3>
 					<ul>
 						<li>Similar to <code>if</code>, but with more branching options</li>
-						<li>Fallback or default case: <code>default</code>></li>
+						<li>Fallback or default case: <code>default</code></li>
 						<li>No fall through to following cases</li>
 					</ul>
 					<pre><code class="hljs" data-trim data-line-numbers>
-							assembly {
-								switch x
-									case 0 { x := 1 }
-									default { x := add(x,1) }
-							}
+					assembly {
+						switch x
+							case 0 { x := 1 }
+							default { x := add(x,1) }
+					}
 					</code></pre>
 				</section>
 
@@ -161,17 +168,17 @@
 						<li><code>continue</code>: skip to next iteration</li>
 					</ul>
 					<pre><code class="hljs" data-trim data-line-numbers>
-    					function lo(uint max) public pure returns(uint result) {
-        				assembly {
+					function lo(uint max) public pure returns(uint result) {
+						assembly {
 							for { let i := 0 } 
 							lt(i, 20)
 							{ i := add(i, 1) } {
-                			if lt(i,3) { continue }
-                			if gt(i, max) { break }
-                			result := add(result,1)
-            				}
-        				}
-    					}
+							if lt(i,3) { continue }
+							if gt(i, max) { break }
+							result := add(result,1)
+							}
+						}
+					}
 				</code></pre>
 				</section>
 
@@ -249,17 +256,17 @@
 				</textarea></section>
 
 				<section data-markdown>
-					### Data Sanity
-					- If you access variables of a type that spans less than 256 bits (e.g. uint64, address, bytes16 or byte), 
-						bits not part of the type, may not be `zeroed`
-					- Always clear data before using it
-					```
-					uint32 x = f(); 
-					assembly {
-						x := and(x, 0xffffffff) 
-						/* now use x */ 
-					}
-					```
+				### Data Sanity
+				- If you access variables of a type that spans less than 256 bits (e.g. uint64, address, bytes16 or byte), 
+					bits not part of the type, may not be `zeroed`
+				- Always clear data before using it
+				```
+				uint32 x = f(); 
+				assembly {
+					x := and(x, 0xffffffff) 
+					/* now use x */ 
+				}
+				```
 				</section>
 
 				<section data-markdown><textarea data-template>
@@ -279,20 +286,20 @@
 				</section>
 
 				<section data-markdown>
-					### Signed Functions
-					- Use to process signed data
-					- sdiv(), smod(), slt(), sgt(), sar(), signextend()
-					- Would x be 100 or 99 from the following code?
+				### Signed Functions
+				- Use to process signed data
+				- sdiv(), smod(), slt(), sgt(), sar(), signextend()
+				- Would x be 100 or 99 from the following code?
 
-					```
-						int a = -3;
-						assembly {
-							let x := 100
-							if lt(a, 0) {
-								x := 99
-							}
-						}
-					```
+				```
+				int a = -3;
+				assembly {
+					let x := 100
+					if lt(a, 0) {
+						x := 99
+					}
+				}
+				```
 				</section>
 
 				<section data-markdown><textarea data-template>
@@ -300,15 +307,15 @@
 					- Increase the number of bits of a binary number
 					- Preserve the sign (+/-) of the number
 					- Extend 0x1110 to 0x11111110
-```
-    function f(uint8 x) public pure returns(bytes32 result) {
-        assembly {
-            let a := 0xfe
-            // x = 0 to extend 1 byte value
-            result := signextend(x, a) 
-        }
-    }
-```
+					```
+					function f(uint8 x) public pure returns(bytes32 result) {
+						assembly {
+							let a := 0xfe
+							// x = 0 to extend 1 byte value
+							result := signextend(x, a) 
+						}
+					}
+					```
 				</textarea></section>	
 				<section>
 					<h2>Gas Fee</h2>
@@ -369,7 +376,7 @@ const gas = await contract.method.estimateGas(arg);
 				progress: true,
 				center: true,
 				hash: true,
-
+				transition:"none",
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
 			});
