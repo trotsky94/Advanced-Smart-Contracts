@@ -1,6 +1,6 @@
 // SPDX-License-Identified: UNLICENSED
 
-pragma solidity >0.4.0 <0.7.0;
+pragma solidity ^0.7.1;
 
 contract StorageDemo {
     
@@ -9,19 +9,24 @@ contract StorageDemo {
     uint8 data3 = 3;
     uint8 data4 = 4;
     
-    
     // get data3 and return it as output
-    function getData() public view returns(bytes32 output3, bytes32 output4){
+    function getData() public view returns(bytes32) {
         assembly {
-            let dataT3 := sload(data3_slot)
-            let dataT4 := sload(data4_slot)
-            let result3 :=  and(shr(shl(3,data3_offset), dataT3), 0xff)
-            let result4 :=  and(shr(shl(3,data4_offset), dataT4), 0xff)
-            mstore(0, result3)
-            mstore(0x20, result4) // 0x20 is 32 bytes as result3 occupied 32 bytes
-            // output := return(0,32)
-            output3 := result3
-            output4 := result4
+            let data := sload(data3.slot)
+            let result := and(shr(shl(3,data3.offset), data),0xff)
+            mstore(0,result)
+            return(0,32)
+        }
+    }
+    
+    function getMultipleData() public view returns(bytes32 result3, bytes32 result4) {
+        assembly {
+            let dataT3 := sload(data3.slot)
+            let dataT4 := sload(data4.slot)
+            result3 := and(shr(shl(3,data3.offset), dataT3),0xff)
+            result4 := and(shr(shl(3,data4.offset), dataT4),0xff)
+            mstore(0,dataT3)
+            mstore(0x20, result4)
         }
     }
 }

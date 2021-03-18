@@ -1,16 +1,15 @@
 // SPDX-License-Identified: UNLICENSED
 
-pragma solidity >0.4.0 <0.7.0;
+pragma solidity ^0.7.1;
 
-contract Calldata {
-    
-    function getData(uint input) public view returns(bytes memory output) {
+contract CalldataEx {
+    function getData(uint input) public view returns(bytes memory) {
         assembly {
             let base := mload(0x40)
-            mstore(add(base, 0x00),0x20) // 0x20 - 32 bytes
-            mstore(add(base, 0x20), 36) // data length
+            mstore(add(base, 0x00), 0x20) // 0x20  - 32bytes
+            mstore(add(base,0x20), 36) // data length
             calldatacopy(add(base, 0x40), 0,36)
-            return(base,0x80)
+            return(base, 0x80)
         }
     }
 }
