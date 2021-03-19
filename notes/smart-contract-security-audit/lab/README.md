@@ -1,5 +1,5 @@
 # Lab : Security Audit
-This project is used for practicing security audit on following contracts intentially coded with security vunerabilities.
+This project is used for practicing security audit on following contracts intentionally coded with security vulnerabilities.
 
 ## Task
 - Create a word document
