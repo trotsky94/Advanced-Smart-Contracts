@@ -26,4 +26,4 @@ rm -rf ./.git ./notes
 3. complete the contract/Storage.sol by returning the state variables as output
 4. run the test: npm test
 5. the test should pass
-6. commit your changes to github and submit your github url
+6. Zip the project and submit on Blackboard.Do not include `node_modules` or you'll receive zero (but you can re-submit)
