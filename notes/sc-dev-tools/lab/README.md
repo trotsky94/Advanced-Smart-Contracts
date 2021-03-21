@@ -21,4 +21,4 @@ You can use the ethereum network provider (local or testnet) and API library (we
     - Create a script to interact with all public functions of deployed contract and test it
     - Create a script that listens to the event emitted by deployed contract and test it.
 
-- Zip the project and submit on BlackBoard. Do not include node_modules or you'll receive but you can re-submit
+- Zip the project and submit on BlackBoard. Do not include node_modules or you'll receive 0 but you can re-submit
