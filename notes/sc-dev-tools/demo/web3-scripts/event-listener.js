@@ -7,6 +7,8 @@ const Web3 = require("web3");
 // Import abi
 const abi = require("./abi.json");
 
+const CONTRACT_ADDRESS="<contract-address-here>"
+
 // create web3 instance
 const web3 = new Web3(
   new Web3.providers.WebsocketProvider(process.env.WEBSOCKET_URI)
@@ -18,7 +20,7 @@ const web3 = new Web3(
   // get contract instance
   const simplestorageContract = new web3.eth.Contract(
     abi,
-    process.env.CONTRACT_ADDRESS
+    CONTRACT_ADDRESS
   );
 
 simplestorageContract.events

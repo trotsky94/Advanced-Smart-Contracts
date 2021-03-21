@@ -7,6 +7,8 @@ const Web3 = require("web3");
 // Import abi
 const abi = require("./abi.json");
 
+const CONTRACT_ADDRESS="<contract-address-here>"
+
 // create web3 instance
 const web3 = new Web3(
   new Web3.providers.HttpProvider(process.env.URI)
@@ -23,7 +25,7 @@ web3.eth.accounts.wallet.add("0x" + process.env.PRIVATE_KEY);
 // get contract instance
 const simplestorageContract = new web3.eth.Contract(
   abi,
-  process.env.CONTRACT_ADDRESS
+  CONTRACT_ADDRESS
 );
 
 // read the value of number
