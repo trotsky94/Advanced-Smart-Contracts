@@ -5,10 +5,10 @@ You can use the ethereum network provider (local or testnet) and API library (we
 
 ### Instructions:
 - Create a directory with the name of your choice
-- Write a smart with use case of your choice which shoould atleast have
+- Write a smart with use case of your choice which should at-least have
     - two public functions that are changing state of the contract
     - one public read-only or pure function
-    - one private function 
+    - one private function (this private function must be used within the any public function)
     - one event that gets emitted by one of the function 
       (Note: A event can only be emitted by a function that changes changes state of the contract)  
 - Initialize the repo by running `npm -y init`
@@ -21,5 +21,4 @@ You can use the ethereum network provider (local or testnet) and API library (we
     - Create a script to interact with all public functions of deployed contract and test it
     - Create a script that listens to the event emitted by deployed contract and test it.
 
-Push the code to github repository and submit the URL to mark the submission.
->If your repository is private, invite me to collaborate using my GitHub handle @dhruvinparikh93
+- Zip the project and submit on BlackBoard. Do not include node_modules or you'll receive but you can re-submit
