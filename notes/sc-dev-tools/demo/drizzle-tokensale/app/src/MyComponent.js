@@ -60,7 +60,7 @@ export default ({ drizzle, drizzleState }) => {
                     contract="GBCToken"
                     method="symbol"
                   />
-                  . Buy more! Each token costs 0.0001 ether.
+                  . Buy more! Each token costs 0.00001 ether.
                 </p>
                 <ContractForm
                   drizzle={drizzle}

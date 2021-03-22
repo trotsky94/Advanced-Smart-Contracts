@@ -148,6 +148,9 @@ INFO [03-21|00:01:43.630] IPC endpoint opened                      url=/Users/dh
 - set coinbase account : `miner.etherbase(eth.accounts[0])`
 > This is where all the ethers rewarded during mining will be credited
 
+- to start mining : `miner.start(1)`
+> to stop mining : `miner.stop()`
+
 ```console
 INFO [03-21|16:01:16.242] Successfully sealed new block            number=1 sealhash="de0588…cfe561" hash="940c68…fbd2c8" elapsed=41.221s
 INFO [03-21|16:01:16.243] Commit new mining work                   number=2 sealhash="052be1…73e053" uncles=0 txs=0 gas=0 fees=0 elapsed="786.944µs"

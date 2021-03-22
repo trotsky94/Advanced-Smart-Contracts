@@ -1,12 +1,6 @@
 require("dotenv").config("./.env");
 const { ethers } = require("ethers");
 
-// Import BigNumber
-const BigNumber = require("bignumber.js");
-
-// the constructor argument
-const _number = new BigNumber(2);
-
 // Import abi
 const abi = require("./abi.json");
 
@@ -26,7 +20,7 @@ const wallet = new ethers.Wallet(`0x${process.env.PRIVATE_KEY}`, provider);
 const factory = new ethers.ContractFactory(abi, bytecode, wallet);
 
 // deploy the contract
-factory.deploy([_number]).then(async (contract) => {
+factory.deploy(2).then(async (contract) => {
   // contract deployment
   await contract.deployed();
   console.log("Deployed at ", contract.address);
@@ -49,4 +43,5 @@ factory.deploy([_number]).then(async (contract) => {
   });
 });
 
-// contract is deployes at 0x5F7C2f13E6eabfac0E4E2C74Cd69056647DcE0b4 on rinkeby
+// contract is deployed at 0x5F7C2f13E6eabfac0E4E2C74Cd69056647DcE0b4 on rinkeby
+// contract is deployed at 0xaD7DDecb646ab6849E13ABdfb1C5b1F2A377Bd32 ono rinkeby

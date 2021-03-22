@@ -7,7 +7,7 @@ const Web3 = require("web3");
 // Import abi
 const abi = require("./abi.json");
 
-const CONTRACT_ADDRESS="<contract-address-here>"
+const CONTRACT_ADDRESS="0x88F86Fee7bBf211d513FB657a3bcBc35b0a37160"
 
 // create web3 instance
 const web3 = new Web3(
@@ -57,11 +57,11 @@ simplestorageContract.methods
 
 // Use this code to increment the value
 simplestorageContract.methods
-  .decrement()
+  .increment()
   .estimateGas()
   .then((gas) => {
     simplestorageContract.methods
-      .decrement()
+      .increment()
       .send({ from: web3.eth.accounts.wallet[0].address, gas });
   });
 
