@@ -1,4 +1,3 @@
-// const MetaCoin = artifacts.require("MetaCoin");
 const ReceiverPays = artifacts.require("ReceiverPays");
 const BigNumber = require("bignumber.js");
 contract("ReceiverPays", (accounts) => {
@@ -10,8 +9,8 @@ contract("ReceiverPays", (accounts) => {
   const ownerSkey = web3.eth.accounts.wallet[0].privateKey;
   const receiver = accounts[1];
   const depositedAmount = web3.utils.toWei("2", "ether");
-  const receipientClaimAmount = web3.utils.toWei("1", "ether");
-  const nonce = "0";
+  const recipientClaimAmount = web3.utils.toWei("1", "ether");
+  const nonce = "0"; // check number
   it("the receiver should be able to able to claim if signature is verified", async () => {
     await web3.eth.sendTransaction({
       from: masterAccount,
@@ -48,7 +47,7 @@ contract("ReceiverPays", (accounts) => {
     // writing a check to the recipient to withdraw say  1 Ether
     const message = web3.utils.soliditySha3(
       { t: "address", v: receiver },
-      { t: "uint256", v: receipientClaimAmount },
+      { t: "uint256", v: recipientClaimAmount },
       { t: "uint256", v: nonce },
       { t: "address", v: contractAddress }
     );
@@ -57,15 +56,21 @@ contract("ReceiverPays", (accounts) => {
     // recipient will use the signed message to claim the amount
     const receiverBalance = await web3.eth.getBalance(receiver);
     const claimPaymentTx = await receiverPaysTx.methods
-      .claimPayment(receipientClaimAmount, nonce, sig.signature)
+      .claimPayment(recipientClaimAmount, nonce, sig.signature)
       .send({ from: receiver });
-      const trx = await web3.eth.getTransaction(claimPaymentTx.transactionHash);
-      const transactionFee = web3.utils
+    const trx = await web3.eth.getTransaction(claimPaymentTx.transactionHash);
+    const transactionFee = web3.utils
       .toBN(trx.gasPrice)
       .mul(web3.utils.toBN(claimPaymentTx.gasUsed));
-    const calculatedReceiverBalance = web3.utils.toBN(receiverBalance).add(web3.utils.toBN(receipientClaimAmount)).sub(web3.utils.toBN(transactionFee));
+    const calculatedReceiverBalance = web3.utils
+      .toBN(receiverBalance)
+      .add(web3.utils.toBN(recipientClaimAmount))
+      .sub(web3.utils.toBN(transactionFee));
     const receiverNewBalance = await web3.eth.getBalance(receiver);
-    assert.equal(calculatedReceiverBalance,receiverNewBalance,"The balance of receiver is not as expected.")
-
+    assert.equal(
+      calculatedReceiverBalance,
+      receiverNewBalance,
+      "The balance of receiver is not as expected."
+    );
   });
 });

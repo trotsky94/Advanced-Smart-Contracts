@@ -27,7 +27,7 @@ Following the steps to complete this exercise:
 3. run the test: ```npm test```
 4. make sure 1 test case passes, the one that deploys the contract
 5. write down a test case for `withdraw` and `close` by modifying `test/longlivepaymentchannel.test.js`
-6. commit your changes to github and submit your github url
+6. zip the project and submit to BlackBoard without node_modules or you'll 0 (but you can re-submit)
 
 #### Are you feeling adventurous?
 7. Add test cases for `claimTimeOut`, `startSenderClose` and `deposit` function . (not consider for evaluation) 
