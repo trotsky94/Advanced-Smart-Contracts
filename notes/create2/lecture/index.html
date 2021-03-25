@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+    <head>
+		<meta charset="utf-8">
+
+		<title>Introduction to state channel</title>
+
+		<meta name="description" content="A lesson on state channel">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/white.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+            .credits{
+              font-size: small;
+            }
+          </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contract 
+						#### CREATE2
+						<div class="author">Dhruvin Parikh, March 2021</div>
+					</textarea>
+				</section>
+		
+                <section data-markdown><textarea data-template>
+                ### Topics
+                - Counterfactual
+                - Create2
+                - EIP 1014
+                </textarea></section>
+
+        <section>
+            <h3>What is initcode?</h3>
+            <ul>
+              <li>Contract creation code</li>
+              <li>Contract Constructor logic and parameters</li>
+              <li>Generate the contract runtime bytecode</li>
+              <li>The bytecode in Remix "Compilation details" for a contract</li>
+            </ul>
+          </section>
+  
+          <section>
+            <h3>Runtime Bytecode</h3>
+            <ul>
+              <li>Contract code
+                <ul>
+                  <li>No constructor and parameters</li>
+                  <li>This restricts constructor execution after contract deployment</li>
+                </ul>
+              </li>
+              <li>Stored on-chain</li>
+              <li>Also known as Deployed Bytecode</li>
+              <li><a href="https://medium.com/authereum/bytecode-and-init-code-and-runtime-code-oh-my-7bcd89065904" target="_blank">init code vs runtime code</a></li>
+            </ul>
+          </section>
+
+        <section data-markdown><textarea data-template>
+        ### Smart contract creation : `CREATE`
+        * Solidity's `new`  and `truffle migrate` (using EOA)
+        * Nonce
+            * Every EOA has nonce increased every transaction
+            * Every contract account has nonce increased every new contract creation
+            * They are sequential and cannot be re-used
+        * Hash of sender's account address and nonce
+            * `new_address = hash(sender, nonce)`
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+        ### Salted contract creation : `CREATE2`
+        * sender ever deploys `bytecode` using `CREATE2` and the provided `salt`, it will be stored in `new_address`.
+            * `new_address = hash(0xFF, sender, salt, bytecode)`
+            * *salt* - 32-byte random data
+        * Introduced by <a href="https://eips.ethereum.org/EIPS/eip-1014" target="_blank">EIP 1014</a>
+        * Ability to predict address where a contract will be deployed without actually deploying
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+        ### Salted contract creation : `CREATE2`
+        ```
+        function createDSalted(bytes32 salt, uint arg) public {
+        address predictedAddress = address(uint160(uint(
+           keccak256(abi.encodePacked(bytes1(0xff),address(this),salt,
+            keccak256(abi.encodePacked(
+            type(D).creationCode,
+            arg
+        )))))));
+        D d = new D{salt: salt}(arg);
+        require(address(d) == predictedAddress);
+        }
+        ```
+        * This complicated expression demonstrates how address is pre-computed
+            * Use `new D{salt: salt}(arg)`
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+        ### Counterfactual
+        * `CREATE` can be used to predict address where the next contract will be deployed
+            * Only if *no transaction* happen before - an undesirable property for counterfactual systems
+        * Counterfactual deployment - `CREATE2`
+            * `new_address` is independent of future events
+            * `bytecode` in address computation will enable agents to rely on `new_address`
+        </textarea></section>
+
+        
+        <section data-markdown><textarea data-template>
+          ### Contract Address
+          - If "create" is used, the contract address is:
+        keccak256(rlp([caller, nonce]))[12:]
+
+          - If "create2" is used, the contract address is: 
+        keccak256(0xff + caller + salt + keccak256(init_code))[12:]
+
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Create2
+          - A low level way to create a contract
+          - create2(v, p, n, s)
+            - *v* is contract creation value in wei
+            - *p* is the memory location of the contract code 
+            - *n* is the length of contract code
+            - *s* is the salt
+          - <a href="https://eips.ethereum.org/EIPS/eip-1014" target="_blank">EIP 1014 Skinny CREATE2</a>
+          </textarea>
+        </section>
+
+
+        <section data-markdown><textarea data-template>
+
+        ### Goal of CREATE2
+    
+        * Allow state channel interactions to be made with addresses that do not exist yet on-chain but can be relied on to eventually contain code (counterfactuality)
+        * Contracts that act as judges for off-chain interactions, which only need to be created if there is a dispute. 
+        * Contract Upgrade
+        * User Onboarding
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+        ### CREATE2 EXAMPLE (ASSEMBLY)
+
+        ```
+        function deploy(bytes memory code, bytes32 salt) 
+        public returns (address addr) {
+        assembly {
+            addr := create2(0, add(code, 0x20), mload(code), salt)
+            if iszero(extcodesize(addr)) { revert(0, 0) }
+        }
+        }
+        ```
+        </textarea></section>
+
+        <section data-markdown>
+          <textarea data-template>
+            ## Contract Code
+            * need assembly to use extcodesize and extcodecopy
+            ```
+            function GetCodeAt(address _addr) public view 
+            returns (bytes memory o_code) {
+                assembly {
+                    let size := extcodesize(_addr) // code size
+                    o_code := mload(0x40)  // free memory pointer
+                    mstore(0x40, add(o_code, and(add(add(size, 0x20), 0x1f), not(0x1f))))
+                    mstore(o_code, size)   // code length
+                    extcodecopy(_addr, add(o_code, 0x20), 0, size) // copy code
+                }
+            }
+            ```
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+            ## Contract Hash
+            - EXTCODEHASH
+            - <a href="https://eips.ethereum.org/EIPS/eip-1052" target="_blank">Introduced by EIP-1052</a>
+            - Openzepplin <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol#L26" target="_blank">isContract()</a>  utility function
+            ```js
+            function isContract(address account) internal view      
+            returns (bool) {    
+              bytes32 codehash;
+              bytes32 accountHash = 0xc5d2...ad8045d85a470;   
+              assembly { codehash := extcodehash(account) }
+              return (codehash != accountHash && codehash != 0x0);        
+            }
+            ```
+          </textarea>
+        </section> 
+
+        <section data-markdown><textarea data-template>
+          ### Create2 Attack Vector
+          Contracts created with create2 could be replaced with different logic at the same address
+        </textarea></section>
+
+        <section data-markdown><textarea data-template>
+          ### Upgrade: Create2 vs Proxy 
+          - Create2
+           - more gas efficient, no delegate call
+           - more complex, uses selfdestruct
+           - selfdestruct will wipe out storage
+          - Proxy pattern 
+           - is more well-known
+           - simpler and easier to understand
+           - storage persists after upgrade
+          </textarea></section>
+        
+        <section>
+          <h3>Lab</h3>
+            <h4>Follow the instructions on the <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/create2/lab/create2-upgrade#readme" target="_blank">readme</a> file of create2-upgrade</h4>
+        </section>
+        
+        <section>
+            <h3>References</h3>
+            <ul>
+                <li><a href="https://blog.openzeppelin.com/getting-the-most-out-of-create2/" target="_blank">Getting most out of CREATE2</a></li>
+            </ul>
+        </section>
+        <section data-markdown><textarea data-template>
+
+            ## End
+            
+        </textarea></section>      
+
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+                transition:"none",
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+	</body>
+</html>
