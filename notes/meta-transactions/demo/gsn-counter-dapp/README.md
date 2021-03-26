@@ -6,7 +6,7 @@ Building a DAPP for sending meta transaction (gas less transaction)
 - Clone this repository
 
 ```bash
-git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./gsn-counter-dapp && cd ./gsn-dapp && git filter-branch --prune-empty --subdirectory-filter ./notes/meta-transactions/demo/gsn-counter-dapp HEAD && rm -rf ./.git
+git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./gsn-counter-dapp && cd ./gsn-counter-dapp && git filter-branch --prune-empty --subdirectory-filter ./notes/meta-transactions/demo/gsn-counter-dapp HEAD && rm -rf ./.git
 ```
 
 ### Spin up backend
