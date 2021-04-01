@@ -1,0 +1,598 @@
+<!doctype html>
+<html>
+    <head>
+		<meta charset="utf-8">
+
+		<title>Vyper</title>
+
+		<meta name="description" content="A lesson on state channel">
+		<meta name="author" content="Dhruvin Parikh">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="../../../reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="../../../reveal.js/dist/theme/white.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="../../../reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+            .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+
+      .reveal .big-and-bold {
+        font-weight: bold;
+        font-size: 135%;
+      }
+
+      .reveal .shrunk-a-bit {
+        font-size: 90%;
+      }
+
+      .reveal .shrunk-a-bit pre {
+        width: 100%;
+      }
+
+      .reveal pre {
+        width: 100%;
+      }
+
+      .reveal .highlight {
+        color: yellow;
+        font-weight: bold;
+      }
+
+      .reveal .highlightRed {
+        color: red;
+        font-weight: bold;
+      }
+
+      .reveal .highlightGreen {
+        color: green;
+        font-weight: bold;
+      }
+
+      .left {
+        left:-8.33%;
+        text-align: left;
+        float: left;
+        width:50%;
+        z-index:-10;
+      }
+
+      .right {
+        left:31.25%;
+        top: 75px;
+        text-align: left;
+        float: right;
+        z-index:-10;
+        width:50%;
+      }
+
+      table {
+        font-size: 80%;
+      }
+          </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						### BCDV 1013 - Advanced Smart Contract 
+						#### Vyper
+						<div class="author">Dhruvin Parikh, March 2021</div>
+					</textarea>
+				</section>
+		
+                <section data-markdown><textarea data-template>
+                ### Topics
+                * Value types and reference types 
+                * EVM compatible languages
+                * Benefits & Drawbacks of languages 
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Vyper language description
+                * Types
+                * Environment variables & constant
+                * Event logging
+                * Built-in functions
+                * statements and control structures
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Types in Vyper
+                * Value types
+                * Reference types
+                * Initial values
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value types
+                * Boolean : `bool`
+                * Signed integer (128bit) : `int128`
+                * Unsigned integer (256bit) : `uint256`
+                * Decimals : `decimal`
+                * Address : `address`
+                * 32-bit-wide Byte Array : `bytes32`
+                * Byte Arrays : `Bytes`
+                * Strings : `string`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `bool`
+                ```
+                a: bool = True
+                ```
+                * Stores only `True` or `False`
+                * Operators
+                    * Logical negation : `not x`
+                    * Logical conjunction : `x and y`
+                    * Logical disjunction : `x or y`
+                    * Equality : `x == y`
+                    * Inequality : `x != y`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `int128`
+                ```
+                total_paid: int128 
+                ```
+                * Stores values between -2<sup>127</sup> and (2<sup>127</sup> - 1)
+                * Operators
+                    * Comparision : `<`,`<=`,`==`,`!=`, `>=`, `>`
+                    * Arithmetic : `+`,`-`,negation(`-x`),`*`,`/`,`**`,`%`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `uint256`
+                ```
+                total_paid: uint256
+                ```
+                * Stores values between 0 and (2<sup>256</sup> - 1)
+                * Operators
+                    * Comparision : `<`,`<=`,`==`,`!=`, `>=`, `>`
+                    * Arithmetic : `+`,`-`,`*`,`/`,`**`,`%`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `decimal`
+                ```
+                value2: decimal = 2.0
+                ```
+                * 10 decimal precision between -2<sup>127</sup> and (2<sup>127</sup> - 1)
+                * decimal point is must
+                * Operators
+                    * Comparision : `<`,`<=`,`==`,`!=`, `>=`, `>`
+                    * Arithmetic : `+`,`-`,negation(`-x`),`*`,`/`,`**`,`%`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `address`
+                ```
+                owner:address
+                ```
+                * 20 bytes or 160 bits Ethereum address.
+                * `0x` prefixed hex literal
+                * Members
+                    * `balance:uint256` - balance of address
+                    * `codehash:bytes32` - keccak256(code-at-address) 
+                    * `codesize:uint256` - deployed contract code size at address
+                    * `is_contract:bool` - is contract deployed at address
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `bytes32`
+                ```
+                # Declaration
+                hash: bytes32
+                # Assignment
+                self.hash = _hash
+                ```
+                * Like byte arrays except this is 32-bit-wide
+                * Operators
+                    * `keccak256(x)`
+                    * `concat(x,...)` - Concatenate multiple inputs
+                    * `slice(x, start=_start, len=_len)` - Returns a slice of `_len` starting at `_start` 
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `Bytes`
+                ```
+                # bytes string assignment
+                bytes_string: Bytes[100] = b"\x01"
+                # hexadecimal assignment 
+                hex_bytes: Bytes[100] = 0x01 
+                # binary assignment
+                binary_bytes: Bytes[100] = 0b00000001 
+                ```
+                * fixed size byte array
+                * `Bytes[maxLen]` - `maxLen` is max # of bytes
+                * annotated as bytes at ABI level 
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Value type : `string`
+                ```
+                # Assignment
+                example_str: String[100] = "Test String"
+                ```
+                * Fixed-size strings can hold strings with equal or fewer characters than the maximum length of the string. 
+                * Fixed-size bytes array is annotated as string at ABI level.
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Reference Types
+                * Fixed-size Lists : e.g. `exampleList: int128[3]`
+                * Structs : `struct`
+                * Mappings : `HashMap[_KeyType, _ValueType]`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Reference Type : Fixed-size Lists
+                ```
+                # Defining a list
+                exampleList: int128[3]
+
+                # Setting values
+                exampleList = [10, 11, 12]
+                exampleList[2] = 42
+
+                # Returning a value
+                return exampleList[0]
+                ```
+                * Syntax - `_name: _ValueType[_Integer]`
+                * Finite number of elements of same type.
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Reference Type : `struct`
+                ```
+                # Definition
+                struct MyStruct:
+                    value1: int128
+                    value2: decimal
+                # Declaration
+                anyStruct : MyStruct
+                # Constructing
+                anyStruct = MyStruct({value: 1, value2 : 2.0})
+                ```
+                * custom defined type to group several variables
+                * Structs can be insinde mapping or array
+                * mapping cannot be inside struct  
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Reference Type : `HashMap`
+                ```
+                # Defining a mapping
+                exampleMapping: HashMap[int128, decimal]
+                
+                # Accessing a value
+                exampleMapping[0] = 10.1 
+                ```
+                * Syntax - `HashMap[_KeyType, _ValueType]`
+                    * `_KeyType` - base or bytes type
+                    * `_ValueType` - any type including mapping
+                * keccak256 of key is stored inside mapping 
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Default Values
+                * `address` : `0x0000000...00000000` (20 bytes)
+                * `bool` : `False`
+                * `bytes32` : `0x0000000...00000000` (32 bytes)
+                * `decimal` : `0.0`
+                * `int128` : `0`
+                * `uint256` : `0`
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Type conversions
+                * Explicitly use Built-in `convert(a: atype, btype)` function
+                * Read more in the <a href="https://vyper.readthedocs.io/en/latest/types.html#type-conversions" target="_blank">vyper docs</a>
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Variable definition
+                ```
+                # In Vyper
+                varName: accessControl ( type )
+                voter: public (address)
+
+                # In Solidity
+                type accessControl varName 
+                address public voter;
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Function visibility
+                * `@external` - called by EOA
+                * `@internal` - use `self` to call internal functions
+                    * internal functions does not have access to `msg.value` and `msg.sender`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Mutability
+                * `@pure` : no state read/write 
+                * `@view` : only state read
+                * Nonpayable - state read/write, cannot receive Ether 
+                * `@payable` - state read/write, can receive Ether
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Constructor Declaration
+                ```
+                # Vyper
+                @public
+                def __init__():
+
+                # Solidity
+                constructor () { … } 
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### `__default__`
+                ```
+                event Payment:
+                amount: int128
+                sender: indexed(address)
+
+                @external
+                @payable
+                def __default__():
+                    log Payment(msg.value, msg.sender)
+                ```
+                * Similar to `fallback` in solidity
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Function Declaration
+                ```
+                # Vyper
+                @public
+                def functionName(_varName:type):
+
+                # Solidity
+                function functionName(type varName) public { … }
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Payable Function Declaration 
+                ```
+                # Vyper
+                @public
+                @payable
+                def functionName(_varName:type):
+
+                # Solidity
+                function functionName(type varName) public payable { … }
+                ```
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Error handling 
+                ```
+                # Vyper
+                assert(some-boolean-operation)
+
+                # Solidity
+                require(some-boolean-operation,"reason-string");
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Error handling 
+                ```
+                # Vyper
+                assert x > 5, "value to low"
+                raise "something vent wrong"
+
+                # Solidity
+                require(some-boolean-operation,"reason-string");
+                revert("reason string")
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### `self` 
+                ```
+                state_var: uint256
+                
+                @internal
+                def _times_two(amount: uint256) -> uint256:
+                    return amount * 2
+
+                @external
+                def set_var(amount: uint256) -> uint256:
+                    return self._times_two(amount)
+
+                @external
+                @view
+                def get_var() -> uint256:
+                    return self.state_var
+                ```
+                * `self` used to access state variables & functions within the contract.
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Block and Transaction Properties 
+                * Block 
+                    * `block.coinbase`, `block.difficulty`, `block.number`
+                    * `block.prevhash` = `blockhash(block.number - 1)`
+                    * `block.timestamp`
+                * `chain.id`
+                * calldata
+                    * `msg.gas`, `msg.sender`, `msg.value`, `tx.origin`
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Built In Constants
+                * `ZERO_ADDRESS:address` - `0x000...0000000`
+                * `EMPTY_BYTES32:bytes32`	0x0000...00000000
+                * `MAX_INT128:int128` - `2**127 - 1`
+                * `MIN_INT128:int128` - `-2**127`
+                * `MAX_DECIMAL:decimal`- `(2**127 - 1)`
+                * `MIN_DECIMAL:decimal`- `(-2**127)`
+                * `MAX_UINT256:uint256` - `2**256 - 1`
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Custom constants
+                ```
+                TOTAL_SUPPLY: constant(uint256) = 10000000
+                total_supply: public(uint256)
+
+                @external
+                def __init__():
+                    self.total_supply = TOTAL_SUPPLY
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Event Logging
+                ```
+                # Vyper
+                event MyEvent:
+                    amount: int128
+                    sender: indexed(address)
+                log MyEvent(msg.value, msg.sender)
+
+                # Solidity
+                event MyEvent(int128 amount, address indexed sender);
+                emit MyEvent(msg.value, msg.sender);
+                ```
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Interfaces
+                ```
+                # Definition
+                interface FooBar:
+                    def calculate() -> uint256: view
+                    def test1(): nonpayable
+                
+                # Import
+                from foo import FooBar
+
+                # Usage
+                @external
+                def test(some_address: address):
+                    FooBar(some_address).calculate()
+ 
+                ```
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Vyper feature omission
+                * <span class="highlightRed">Modifiers</span>
+                * Class inheritance
+                * Inline Assembly
+                * Function/operator overloading
+                * <span class="highlightRed">Recursive</span> calling or <span class="highlightRed">infinite</span> length loops
+                * Binary fixed points
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Vyper key features
+                * Bound and overflow checking on <span class="highlightRed">array accesses</span> and on an <span class="highlightRed">arithmetic level</span>
+                * <span class="highlightRed">Signed integers</span> and decimals <span class="highlightRed">fixed point</span> numbers
+                * Upper bound for <span class="highlightRed">gas consumption</span>
+                * Strong typing
+                * Small and <span class="highlightRed">understandable</span> compiler code
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Available languages for EVM
+                * Solidity
+                * Vyper
+                * LLL
+                * Flint
+                * Yul
+                * eWASM
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### Yul
+                * Intermediate language compiling to different EVM
+                * Supports
+                    * `switch`, function, `block`, `var`, literal, loop, `if`, expression, variable
+                * <a href="https://docs.soliditylang.org/en/latest/yul.html#simple-example" target="_blank">Example</a>
+                </textarea></section>
+
+
+                <section data-markdown><textarea data-template>
+                ### LLL
+                * Assembly-like code with keywords
+                * Manipulation of data and bytes themselves
+                * <a href="https://github.com/mmalvarez/eth-isabelle/blob/master/example/LLLL.thy" target="_blank">Example</a>
+                </textarea></section>
+
+        <section>
+          <h3>Exercise</h3>
+            <h4>Follow the instructions on the <a href="" target="_blank">readme</a> file of vyper</h4>
+        </section>
+        
+        <section>
+            <h3>References</h3>
+            <ul>
+                <li><a href="https://vyper.readthedocs.io/en/latest/" target="_blank">Vyper docs</a></li>
+                <li><a href="https://eth-brownie.readthedocs.io/en/latest/" target="_blank">eth-brownie docs</a></li>
+            </ul>
+        </section>
+        <section data-markdown><textarea data-template>
+
+            ## End
+            
+        </textarea></section>      
+
+			</div>
+		</div>
+
+		<script src="../../../reveal.js/dist/reveal.js"></script>
+		<script src="../../../reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="../../../reveal.js/plugin/notes/notes.js"></script>
+		<script src="../../../reveal.js/plugin/search/search.js"></script>
+		<script src="../../../reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="../../../reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+                transition:"none",
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+	</body>
+</html>
