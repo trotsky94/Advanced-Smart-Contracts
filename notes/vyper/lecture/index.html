@@ -192,7 +192,7 @@
                     * `balance:uint256` - balance of address
                     * `codehash:bytes32` - keccak256(code-at-address) 
                     * `codesize:uint256` - deployed contract code size at address
-                    * `is_contract:bool` - is contract deployed at address
+                    * `is_contract:bool` - is contract deployed?
                 </textarea></section>
 
                 <section data-markdown><textarea data-template>
@@ -322,6 +322,22 @@
                 </textarea></section>
 
                 <section data-markdown><textarea data-template>
+                ### Public variables
+                ```
+                data: public(int128)
+                ```
+                * Storage variables can be marked as `public` during declaration
+                * Default getter function for public state variable
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Scope and assignment
+                * For storage variables (declared in the module scope), an initial value cannot be set
+                * For memory variables (declared within a function), an initial value must be set
+                * For calldata variables (function input arguments), a default value may be given
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
                 ### Function visibility
                 * `@external` - called by EOA
                 * `@internal` - use `self` to call internal functions
@@ -352,8 +368,8 @@
                 ### `__default__`
                 ```
                 event Payment:
-                amount: int128
-                sender: indexed(address)
+                    amount: int128
+                    sender: indexed(address)
 
                 @external
                 @payable
@@ -361,6 +377,19 @@
                     log Payment(msg.value, msg.sender)
                 ```
                 * Similar to `fallback` in solidity
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### `@nonreentrant("lock")`
+                ```
+                @external
+                @nonreentrant("lock")
+                def make_a_call(_addr: address):
+                    # this function is protected from re-entrancy
+                    # ...
+                ```
+                * It places a lock on a function, and all functions with the same key_value. 
+                * An attempt by an external contract to call back into any of these functions causes the transaction to revert.
                 </textarea></section>
 
 
@@ -503,6 +532,31 @@
                     FooBar(some_address).calculate()
  
                 ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Brownie
+                * IDE for deploying, interacting, debugging and testing vyper contracts
+                * Detailed installation <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/blob/master/notes/vyper/lecture/brownie-installation.md" target="_blank"> instructions</a>.
+                ```
+                # Installation
+                $ pip install eth-brownie
+                # Initialize
+                $ brownie init
+                # Compile
+                $ brownie compile
+                ```
+                </textarea></section>
+
+                <section data-markdown><textarea data-template>
+                ### Brownie Project
+                * `contracts/`: Contract sources
+                * `interfaces/`: Interface sources
+                * `scripts/`: Scripts for deployment and interaction
+                * `tests/`: Scripts for testing the project
+                * `brownie-config.yaml`: Configuration file for the project
+                * `build/`: Project data, such as compiler artifacts and unit test results
+                * `reports/`: JSON report files for use in the GUI
                 </textarea></section>
 
 
