@@ -96,6 +96,25 @@
             <aside class="notes">
             I'm going to discuss about zero knowledge on steroids called secure multi-party computation 
             and what you can do about it. This has been tailored for web3 development.
+            Your personal data like your contact information, your tastes or even your behavior patterns
+            are very valuable.
+            A lot of companies try to collect as much information about you as they can, so they'll
+            be able to sell more ads, give you better recommendations or keep you longer on their
+            platforms.
+            With so many companies and services collecting our data, it almost seems impossible to keep
+            it private.
+            Now of course you could say: don’t use services that collect personal data.
+            If you don’t agree with the way Facebook uses your data for example, you could just
+            decide to not sign up for it or even delete your account.
+            But it’s not that simple, we don’t always have a choice.
+            Try for instance to get a loan from a bank without revealing your financial history.
+            We do have the ultimate control over our personal data but in reality we’re often forced to
+            reveal more than we actually want.
+            So that got me looking into alternative ways of sharing data.
+            Is there a way to provide companies with the data they need, without actually revealing
+            the data itself?
+            Kind of like proving that something is true without revealing the thing we’re proving...
+            Well such a technique does exist and it’s called Zero Knowledge Proof.
             </aside>
 			</textarea></section>
 
@@ -275,12 +294,402 @@
             </textarea></section>
 
 
+            <section data-markdown><textarea data-template>
+            ###  Secure Multiparty Computation (SMPC)
+            <img src="smpc-bid.png">
+            <aside class="notes">
+            The player number n wants to keep the input X private but they all want to collaborate on 
+            computing a joint function f of the inputs and they want to all get the output Y 
+            Now each player may only learn this is the cryptographic definition and in the next slide we'll
+            talk about how to actually think about it and define it. 
+            Each player may only learn what the input is that they started with and what the output is
+            They may not learn anything about any of the inputs of the other players even if 
+            some of the players are malicious and are really trying to collaborate and cheat and spy 
+            on the other players no one is allowed to learn anything else
+            
+            Now the amazing feeling that was proved around the 80s and early 90s is that no
+            matter those various versions of this theorem but the general gist is that no
+            matter what your function f is computing no matter what your business logic is
+            This is doable using a protocol and it only needs to assume some cryptographic
+            assumptions and have a polynomial time overhead which is reasonable and that
+            polynomial is improving with the years so this is getting more and more
+            efficient. So amazingly it's the strongest thing you could imagine no
+            matter what you try to compute we can compute it while keeping the privacy of
+            the players. So that's thought I think enables and will enable a lot of value unlock. 
+            So in particular if your function that you're computing is an auction so each of the
+            player has the bid and you're trying to compute the maximum function which is
+            who bid the highest then you have a poll to call. Well all the players communicate
+            and no matter if the time to cheat or not you're going to compute the maximum
+            of these bits and the only thing the players will learn is the own bid and
+            the maximum of the other bids. 
+            So how cryptographers view it? 
+            </aside>
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  Simulation proofs
+            <img src="sim-proof.png">
+            <aside class="notes">
+            Suppose you're a cryptographer and you have a suggested protocol for secure
+            multi-party computation and it's a great protocol you think it's super safe how
+            do you prove it safe?
+            Well you look at the real world in which you operate on the Left well Ellison Bob
+            I'm just assuming two players for simplicity. 
+            It works for any number of players.
+            You have Alice and Bob that communicate with each other.
+            Bob might be replaced by some demon that is trying to mess 
+            with the protocol and cheat on Alice and learn what X1 is
+            then you imagine for a second you would be in their ideal world. 
+            In the ideal world there's another player Judge Judy who is 
+            completely trusted and keeps everyone privacy and
+            you imagine the simplest protocol imaginable. 
+            Well Alice sends he'll input to Judy and Bob sends his input to judy.
+            judy computes the output and sends it back to the players.
+            If you look at the at the protocol on the right it satisfies all the properties 
+            you wanted. It computes the function and the only
+            thing Alice can learn is X1 and the result no matter how much is trying to
+            spy on Bob. 
+            So the only thing we need to prove is that the protocol that the one
+            on their left works the same as the protocol on the light and the way
+            that computer scientists do this is by reduction. 
+            What they do is that they assume that there's some adversary that
+            breaks the protocol on the left and they prove that by construction. 
+            They can change it to an adversary. It breaks the security or the privacy 
+            on the right because the right protocol is secure almost by definition 
+            then the left one.
+            </aside>
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  Waldo finder 
+            <img src="waldo-finder.png">
+            <aside class="notes">
+            zero knowledge is the primitive
+            where I try to prove something to you
+            without telling you anything about how I am I'm trying to
+            prove a claim to you without telling you anything beyond that the claim is true
+            Suppose your business really benefits from
+            finding Waldo in pictures so this picture has a little Waldo somewhere 
+            in it and you really want to find it but you don't have a good 
+            algorithm for this
+            I come to yours consulting you say that 
+            you have the world's best finding algorithm 
+            I say I don't want to trust whether you can you find 
+            Waldo in this picture. You ask me
+            that you don't want to do free
+            work for you as this is your livelihood so
+            you see we have a conflict in collaboration. We both want to
+            collaborate but we don't trust each other.
+            Well zero knowledge to the rescue.
+            You'll claim that you have a protocol for proving to me
+            that you can find Waldo in this picture without showing how you 
+            did it or where Waldo is.
+            </aside>
+            </textarea></section>
+
+
+
+            <section data-markdown><textarea data-template>
+            ###  Waldo prover 
+            <img src="waldo-prover.png">
+            <aside class="notes">
+            Here's how we do it. 
+            So you ask me to turn around you put the big
+            picture on the floor as I turn around and then you take a 
+            huge cardboard cutout and you put the cardboard cutout such as
+            only Waldo is shown in the picture. It's so huge you don't know 
+            where the picture even started so I can't find where you
+            put the cardboard cutout on the picture
+            so look, you ask me to turn around and you really find Waldo then you ask me to turn
+            back 
+            I take the cardboard cutout away and that's it 
+            So you prove to me that you can find Waldo but I have not learned
+            anything about how you do it and I have not learned anything 
+            about where Waldo is in the picture this comes from a kid
+            cryptography - a collection of really simple protocols. 
+            So my point here is to show
+            you how I can prove something to you
+            without teaching you anything beyond the
+            correctness of the claim. Of
+            course it is  a much more complicated thing but
+            it relies on the same thing arguments
+            about knowledge.
+            </aside>
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP 
+            * Cryptographic protocol
+            * ZKP is probabilistic rather than deterministic
+            * Participants : prover and Verifier
+            * Goal : Prover has secret X, prove to verifier without revealing information about X
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP Conditions
+            * Completeness
+                * If the statement is true, then the honest verifier — the one that is following the
+                protocol properly — will be convinced of this fact by an honest prover.
+            * Soundness
+                * If the statement is false, then no cheating prover can convince the honest
+                verifier that it is true, except for some small probability.
+            * Zero knowledge
+                * If the statement is true, then no verifier learns anything, except fact that
+                the statements is true.
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP structure
+            * witness
+            * challenge
+            * response
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP structure : witness
+            <img src="witness.png">
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP structure : challenge
+            <img src="challenge.png">
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP structure : response
+            <img src="response.png">
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP types
+            * Interactive
+                * Series of action by verifier to prove
+                * Limited transferability (repetition  of process)
+            * Non-Interactive
+                * ZK Snarks
+                * zCASH
+                * Used in blockhains
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  non-interactive ZKP
+            <img src="ni-zkp.png">
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  zk-SNARK
+            * *zk succinct noninteractive argument of knowledge*
+            * **Succinct** - The size of the proof is small enough to be verified in a few milliseconds.
+            * **Noninteractive** - Only one set of information is sent to the verifier for verification, therefore
+            there is no back and forth communication between the prover and verifier.
+            * **Argument of knowledge** - A computationally sound proof: soundness holds against a prover that
+            leverages polynomial-time, i.e. bounded computation.
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  Accuracy
+            * ZKP are not 100% accurate  
+            * it is minimizing the probability that someone is lying to you. 
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  Private transactions
+            <img src="mixer.svg"> 
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  Applications 
+            * Sugar Beet Auctions (Denmark, '08')
+            * Spectrum Auctions
+            * Bitcoin + Privacy (Z CASH) 
+            * Decentralized Ad Auctions(AdEX)
+            * Algorithmic re distribution of wealth(future)
+            * Crypto-Governance(future)
+            * Nuclear disarmament
+            <aside class="notes">
+            the question is what do we do with it so
+            what was done with it until now
+            so the first application was in ojos
+            Denmark in the university that has
+            importantly a really good game theory
+            group and also a really good crypto
+            group so they came together and wrote a
+            system as a pc-based system for auctions
+            of sugar bits 
+            Spectrum auctions - so
+            when militaries release cellular
+            frequencies, cellular operators want to
+            buy this but they don't want to tell
+            each other how much these cellular
+            frequencies are worth so you design an
+            auction where the highest bidder wins
+            but the bit of each cellular operator is
+            kept private so it's a mix of game
+            theory and cryptography.
+            In order to create positive sound business value for
+            the cellular operators and for the state
+            that gets the money from the auction and
+            by now we have zCASH models.
+            ad auctions - AdEX claims to do this so this is
+            coming to feel pretty quickly the premise is the following
+            so right now auctions are run by Google and Facebook you know 
+            you're an eyeball right you have some demographic
+            information your gender your age and so
+            on. Google auctions you to the highest
+            bidder and they don't reveal much to the
+            advertiser beyond your demographic information 
+            but we are testing Google and Facebook. We kind of have to and and
+            they know a lot about us we want to run this with secure 
+            multi-party computation decentralize the whole ad market and
+            then your ads will be served in a
+            decentralized way keeping your entire
+            privacy keeping the privacy
+            of who you are and what your demographic
+            information is but still showing you the
+            highest bidding ad and doing the payment
+            to the publisher and so SPC auctions
+            are already a big thing. Interestingly
+            these auctions will be really
+            interesting because with private it
+            comes more data sharing so you can all
+            of a sudden incentivize people to share
+            not only the the demographic
+            information but also the browsing
+            history, the bank records and medical
+            records the DNA so I can advertise to
+            you based on your DNA. So
+            so we're going to see decentralized
+            auctions that we want the user for
+            sharing the data so they get a kickback
+            and advertisers very very efficiently
+            based on all of your private information
+            algorithmic redistribution
+            of wealth - The nation-state can't go away very very
+            soon because the nation-state has power that is really useful for
+            maintaining welfare systems that allow
+            you to opt out of them , the
+            nation-state isn't going away too soon
+            the poll with the nation-state is not so
+            much it's coercive power which is bad
+            but it's that it uses it in such a dumb
+            way so if you think of taxation
+            succession law is dumb it's legacy code.
+            It's designed for accountants to compute for
+            you to be able to check at home and for legislators to 
+            test so corporate tax is damn all of these fixes and systems are
+            like rule-based systems they don't make
+            sense what should this work like well we
+            have really good algorithmics for
+            running factories for controlling complicated feedback
+            system so it's the same algorithm or the same
+            kind of things in algorithms that are
+            used to control factories efficiently
+            can be used also to control countries to
+            optimize for stuff like social welfare
+            for GDP growth and so on 
+            you will need to mix in some game theory like in
+            auctions or mechanism design to make the players all 
+            of us toothed.
+            we need to mix in some economics to figure out what's
+            best for people and so on but you can
+            design these algorithms and note that
+            they don't have to be optimal they all
+            have to be perfect they have to be
+            better than the legacy systems. 
+            Now to redistribute wealth the
+            problem is that unlike machines where
+            you can attach a sensor and send all of
+            the data to the blockchain, humans care
+            about the privacy and these algorithms
+            should really care about my medical
+            records, DNA and so on so we need to make
+            these systems preserve our privacy and
+            still get all the business values so
+            zero knowledge and secure multi-party
+            computation will be really necessary for
+            these upcoming systems that. 
+            We have a big governance problem by the fact that all
+            of our governance methods are based on
+            legacy systems so our governance is
+            based on voting every four/five/six years on very
+            simplistic rules of voting and so on and
+            I think we'll see crypto governance
+            based on SMPC. That makes governance
+            much more efficient
+            Allowing nations to verify warheads without physical seeing
+            </aside>
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  Downsides 
+            * Preserving privacy
+            * SMPC is too slow (TEE is solution)
+            * Trusting algorithm
+            <aside class="notes">
+            if you're designing for example in uber how do you
+            do this? 
+            Well what you do is you design a
+            system in the light on in the system on
+            the. There is a Judge Judy and then you apply it an SMPC compiler of
+            sorts to transfer it to the left and
+            this is not a trivial test because you
+            need to define your function f very
+            carefully
+            so what smpc proof promises you if you define your function f to 
+            actually concur with how you think about the
+            privacy of your users this will carry to a decentralized
+            setting and the challenge is defining f and making sure that 
+            privacy is kept over time even when you employ when you
+            apply as many times next people come and ask me is SMPC 
+            too slow and the answer is for most of these applications it is
+            but it won't be become faster using a and moves low 
+            it's really hard to tell the
+            users listen there's this magic moon
+            mass that preserves your privacy no
+            matter what so in the same way that it
+            would be really hard to convince someone
+            to get on a big chunk of steel and tell
+            them they'll move through continents the
+            reason users do this is because they've
+            seen others do it and they've done it
+            themselves and nothing bad happened
+            Similarly we put our credit card on the
+            internet something that would be
+            completely crazy because we see this
+            little green lock and we say oh this
+            won't be divulged just like planes don't
+            crash very often so with regulation and
+            normalization that will come adoption
+            it's only a matter of time so asking
+            more about this. 
+            </aside>
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ### Exercise
+            * Follow <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/blob/master/notes/zero-knowledge-proof/lab/README.md" target="_blank">this</a> demo, create a smart contract with a proof
+            * Once the proof is sent do something
+            * It can be as simple as flipping a boolean   
+            </textarea></section>
+
 
         
             <section>
                 <h3>References</h3>
                 <ul>
                     <li><a href="https://youtu.be/J3jKROwTPCs" target="_blank">Zero knowledge in web3 summit 2018</a></li>
+                    <li><a href="https://people.csail.mit.edu/silvio/Selected%20Scientific%20Papers/Proof%20Systems/The_Knowledge_Complexity_Of_Interactive_Proof_Systems.pdf" target="_blank">Knowledge Complexity Of Interactive Proof-systems</a></li>
+                    <li><a href="https://github.com/argentlabs/hopper" target="_blank">Hopper</a> by argentlabs</li>
                 </ul>
             </section>
             
