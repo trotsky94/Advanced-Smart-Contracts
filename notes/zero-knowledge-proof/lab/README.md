@@ -27,8 +27,7 @@ an incompatible version of `snarkjs`. Please use version `0.1.11` as specified i
 
 
 ### Learning About circom
-First, follow the Iden3 circom tutorial at https://iden3.io/blog/circom-and-snarkjs-tutorial2.
-html. You can stop after the “Verifying the proof” section.
+First, follow the Iden3 circom tutorial at https://iden3.io/blog/circom-and-snarkjs-tutorial2.html. You can stop after the “Verifying the proof” section.
 Then, read our example circuits in `circuits/example.circom` and answer the questions in `artifacts/writeup.md`.
 
 ~~Deliverable: artifacts/writeup.md~~
