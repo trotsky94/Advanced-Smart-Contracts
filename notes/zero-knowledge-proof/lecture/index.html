@@ -129,7 +129,8 @@
             We can have only if we trusted each other then everything is good.
             if we sign NDA that's really nice, but that has all kinds of problems with compliance.
             What we really want is to keep information private. I want to keep private and the corporation 
-            wants to keep the patient data private but we want to gain all the benefit as if we were divulging all our
+            wants to keep the patient data private but we want to gain all the benefit 
+            as if we were divulging all our
             information. That's the kind of tasks we're going to talk about today.
             </aside>
             </textarea></section>
@@ -138,12 +139,13 @@
             ### Voting
             <img src="./voting.png" width="400">
             <aside class="notes">
-            For example Tinder. I am speaking to Alice. We want to know whether we both swipe right, but I don't want Alice to know 
+            For example Tinder. I am speaking to Alice. We want to know whether we both swipe right, 
+            but I don't want Alice to know 
             what I swiped in particular and Alice also wants to keep her swipe private for me. 
             Right now we use the tinder servers. Tinder is the trusted intermediary that does the computation of 
             the end function of whether we are both interested? 
-            But we want to really decentralize it and the question is how to get that functionality without trusting a central party? 
-            
+            But we want to really decentralize it and the question is how to get that functionality without trusting 
+            a central party? 
             Voting is the same thing 
             We want to compute who won the election but all the votes need to be kept private
             </aside>
@@ -155,13 +157,17 @@
             <img src="./send-money.png">
             <aside class="notes">
             An application you may know very well - sending money.
-            Right now if I use Bitcoin my public key is posted online as well as the amount of money I transferred right.
-            But if we use a bank to do a transfer the bank doesn't divulge anything when I transfer money to someone I don't want anyone on the internet to know anything 
+            Right now if I use Bitcoin my public key is posted online as well as the amount of money
+            I transferred right.
+            But if we use a bank to do a transfer the bank doesn't divulge anything when 
+            I transfer money to someone I don't want anyone on the internet to know anything 
             about that I passed some money around.
-            So testing intermediaries give us privacy right. Now assuming we toss them but the Bitcoin network doesn't quite. 
+            So testing intermediaries give us privacy right. Now assuming we toss them 
+            but the Bitcoin network doesn't quite. 
             There is a solution for this.
             You may well know solution called Z cashing. 
-            Z cash people can transfer money to other people without anyone knowing that anything interesting has happened beyond that someone transferred 
+            Z cash people can transfer money to other people without anyone knowing 
+            that anything interesting has happened beyond that someone transferred 
             some amount of money to someone else. 
             So Z cash does solve this. 
             But what happens with web applications
@@ -176,7 +182,8 @@
             so What we're going to talk about today is privacy technology 
             we're going to talk about 
             provable privacy
-            cryptographically (privacy that you know it's a queue it's not just heuristic it's cryptographically provable) 
+            cryptographically (privacy that you know it's a queue it's not just heuristic 
+            it's cryptographically provable) 
             private computation (not private communication)
             </aside>
             </textarea></section>
@@ -191,10 +198,12 @@
             <aside class="notes">
             So the agenda will be 
             why you should care about privacy on the blockchain in particular about private computation
-            you're going to see a little bit about how cryptographers implement private computations and what the primitives look like 
+            you're going to see a little bit about how cryptographers 
+            implement private computations and what the primitives look like 
             and how you should think about this.
             we're going to talk about some really great futuristic applications 
-            I'm going to take it down and tell you as web3 developers what you should be thinking about if you want you to make your applications private.
+            I'm going to take it down and tell you as web3 developers what 
+            you should be thinking about if you want you to make your applications private.
             </aside>
             </textarea></section>
 
@@ -203,18 +212,18 @@
             <img src="privacy-on-bc.png">
             <aside class="notes">
             Blockchain privacy is inherently broken. 
-            If you use a wallet to pay for a pizza and then you use a wallet with same public key to pay for a bag of weed 
+            If you use a wallet to pay for a pizza and then you use a wallet with same public key 
+            to pay for a bag of weed 
             then the cops can come and ask the pizza salesman where did they deliver too and come arrest you right. 
-            That's the way that Bitcoin works, if you use the same public key twice you may say well I never use the same public key twice.
-            
+            That's the way that Bitcoin works, if you use the same public key twice you may say well 
+            I never use the same public key twice.
             Using mixer, you have to use it twice once to get the money and 
             wants to give out money to send out money 
             but suppose you only use it twice you're super safe using mixing networks.
-            
             The companies that do chain analysis for example to prevent detect and investigate crypto-currency money
             laundering, fraud and compliance violations is clearly the biggest problem in the world.
-            So all your Bitcoin transfers are not actually secure if some motivated enough analyzer wants to find out who you are.
-            
+            So all your Bitcoin transfers are not actually secure if some motivated 
+            enough analyzer wants to find out who you are.
             They will do so. The real problem is privacy has been promised.
             If you ask people who know about Bitcoin what bitcoin is they'll tell you 
             it's a private way to send money secretly.Solutions are using Zcash, Monello , corda etc
@@ -228,19 +237,24 @@
             But what about your web3 applications? 
 
             Example Uber
-            Well I'm going to argue that private computation and not private communication is really important for web3 applications. 
+            Well I'm going to argue that private computation and not private communication 
+            is really important for web3 applications. 
             Suppose you as a dapp developer really want to decentralize uber then how will you do that?
             uber is a really complicated business logic. 
             You need to preserve reputation
             You need to calculate how much someone pays for the drive and so on 
             so because of that you need to all of the way you'd naturally implement Uber. 
-            On the blockchain is to post all of the private information on other chain or in the blocks and and you need to do that clearly because 
-            you have to compute stuff from it. For example the reputation change is the business logic and therefore things need to be posted in
+            On the blockchain is to post all of the private information on other chain or in the blocks 
+            and and you need to do that clearly because 
+            you have to compute stuff from it. For example the reputation change is the business logic 
+            and therefore things need to be posted in
             clearly.  That means that if I'm trying to spy on your users, I'm going to manage to spy them very well. 
             I'm going to see Donald Trump took ride at 2 a.m. 
-            I'm going to see that because you need to compute reputation changes and money and stuff like that with private communication 
+            I'm going to see that because you need to compute reputation changes and money and stuff like 
+            that with private communication 
             you can't hide this data and still get the business logic but with private computation you can.
-            With private computation in the blockchain the block will look like the one on the right saying everything is garbled except the actually actionable changes
+            With private computation in the blockchain the block will look like the one on the right 
+            saying everything is garbled except the actually actionable changes
             like reputation change.
             People say that Millennials don't care about privacy and the privacy is dead.
             But that's not actually true. Millennials don't care about privacy as much as the older generation does 
@@ -252,13 +266,17 @@
             ### Fostering Collaboration 
             <img src="more-privacy.png">
             <aside class="notes">             
-            The interesting thing is that if we really find a way to secure the privacy of users in-depth we're going to get people to share much more information
+            The interesting thing is that if we really find a way to secure the privacy of users 
+            in-depth we're going to get people to share much more information
             both end users and also corporations and businesses. 
-            Alike now stock by compliance GDPR and stuff like that from sharing a lot of data and the insight is that the more data you get people to share the more
+            Alike now stock by compliance GDPR and stuff like that from sharing a lot of data 
+            and the insight is that the more data you get people to share the more
             positive some value is created right so privacy and privacy tech is really good for all of us because 
-            it's fosters collaboration that's why I don't like to think of it as privacy tech but rather collaboration tech in a perfect world 
+            it's fosters collaboration that's why I don't like to think of it as privacy tech but 
+            rather collaboration tech in a perfect world 
             where everything is computed privately. 
-            We would have lots and lots of positive collaborations and that's good for everyone even for those who don't care about particular issues of privacy 
+            We would have lots and lots of positive collaborations and that's good for everyone even f
+            or those who don't care about particular issues of privacy 
             </aside>
             </textarea></section>
 
@@ -271,25 +289,34 @@
             * Secure Function Evaluation
             * Trusted Execution Environments
             <aside class="notes">  
-            Ok so before going to talk about how cryptographers implement this technology I want to kind of straighten out the buzzwords that we'll all see
-            So the private computation that we'll talk about today is stuff like zero knowledge proof and secure multi-party computation 
+            Ok so before going to talk about how cryptographers implement this technology 
+            I want to kind of straighten out the buzzwords that we'll all see
+            So the private computation that we'll talk about today is stuff like zero knowledge proof 
+            and secure multi-party computation 
             Those are the basic primitives we'll talk about. 
-            There's a whole different area of cryptography called private communication that's the stuff with kind of more familiar with
+            There's a whole different area of cryptography called private communication that's 
+            the stuff with kind of more familiar with
             like public key cryptography and proxy encryption and the way to think.
-            These are completely different types of technology were from all science one of them is private communication which was started in the
+            These are completely different types of technology were from all science one of 
+            them is private communication which was started in the
             70s by people on the right who is Rivest Shamir and Adleman
             The other one private computation was started in the 90s by people like Shafi. 
-            It's very important to remember that these are very different types of science and we're also not going to talk about other privacy
+            It's very important to remember that these are very different types of science and 
+            we're also not going to talk about other privacy
             technology like IP spoofing, the financial privacy and so on. 
             We're going to concentrate on the leftmost side.
-            Now let me tell you a little bit about how cryptographers achieve privacy on the blockchain or private computation in general. 
+            Now let me tell you a little bit about how cryptographers achieve privacy on 
+            the blockchain or private computation in general. 
             First of all I need to define what I mean when I talk about privacy - private computation. 
             What does this actually entail? 
-            So here's a definition of the strongest primitive for private computation and it's kind of the simplest to explain as well it's
-            called secure multi-party computation. This originates in the 80s with the work of Viau on "the millionaires problem". 
+            So here's a definition of the strongest primitive for private computation and 
+            it's kind of the simplest to explain as well it's
+            called secure multi-party computation. This originates in the 80s with the work 
+            of Viau on "the millionaires problem". 
             So this was introduced let's say 82 and they started about 20 years of research and still ongoing. 
             So the primitive is defined as follows 
-            You have n players that want to compute a joint function of the inputs so each of the player of the  have a private input X  that really want to keep private.           
+            You have n players that want to compute a joint function of the inputs 
+            so each of the player of the  have a private input X  that really want to keep private.           
             </aside>
             </textarea></section>
 
@@ -463,6 +490,52 @@
             <section data-markdown><textarea data-template>
             ###  ZKP structure : response
             <img src="response.png">
+            </textarea></section>
+
+
+            <section data-markdown><textarea data-template>
+            ###  ZKP structure : response
+            <img src="response.png">
+            </textarea></section>
+
+            <section data-markdown><textarea data-template>
+            ###  Ali baba cave example
+            * Peggy acts as a prover
+            * Victor acts as a verifier
+            <img src="6f.png">
+            <aside class="notes">
+            A classic example of a protocol with zero-knowledge proof protocol 
+            is a proof of knowledge of the password to the door inside a circular cave. 
+            Let P knows the password and wants to prove his knowledge of V without 
+            disclosing the password itself. Using the following protocol: 
+            Here's how the zero-knowledge proof in this case:
+            V is at point A.
+            P goes all the way through the cave to the door or down the aisle C, or D. 
+            the aisle V does not see which way to go P.
+            Once P disappears in a cave, V moves to point B.
+            V asks P, or exit the cave from the left aisle, or the right of passage.
+            P, if necessary, using the secret to unlock the door, out of the cave from 
+            the passage from which asked him to leave V.
+            P V and repeating steps 1-5 for a number of times .
+            In the case when P does not know the secret, then it can not deceive V, 
+            if the steps of the proof (accreditation) are repeated several times in a row. 
+            Since it can only come from the passage in which he went, 
+            in every round protocol probability to guess which side of the V will ask him to leave, is 50%. 
+            Accordingly, the probability is also deceive V is 50 %. 
+            However, the probability to cheat him in two rounds will be over 25 %, and in n rounds, 
+            he has only one chance of 2n. 
+            V can safely assume that if all n (n = 10-20) rounds proof P are correct,
+              he really knows the secret words that open the door between points C and D.
+            If V writes everything that happens on video, this video is not evidence for a third party. 
+            P and V could agree in advance where V will ask him to leave. 
+            Then it will be time to get out of each of the V space, n
+            ot knowing the magic words. On the other hand, V can spoof video, 
+            leaving only successful attempts P, cut out the rest.
+            It should be noted that the analogy of the cave is not quite correct. 
+            Since the proof of knowledge of words P may just go with one hand, 
+            while V see which way he went, and out the other. However, 
+            it perfectly describes the protocol zero-knowledge proof from a mathematical point of view
+            </aside>
             </textarea></section>
 
             <section data-markdown><textarea data-template>
