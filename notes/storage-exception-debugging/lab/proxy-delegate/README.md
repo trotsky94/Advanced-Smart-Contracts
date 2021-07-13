@@ -1,9 +1,7 @@
 # ProxyDelegate
-
-
 ## Getting started
 
-Clone this repository
+### Clone this repository
 * **Option 1**
 ```bash
 git clone https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts.git ./proxy-delegate && \
