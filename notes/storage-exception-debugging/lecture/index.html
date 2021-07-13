@@ -79,8 +79,10 @@
 			<section data-markdown><textarea data-template>
 					## Topics
 					* Ethereum Smart Contract Storage
-					* `try/catch`
 					* Debugging Ethereum transactions
+					* `try/catch` in Solidity
+					* Custom errors in Solidity
+
 				</textarea></section>
 
 				<section>
@@ -98,7 +100,7 @@
 						<li>One Astronomically large array</li>
 						<li>Solidity generates code that saves variable values in their declaration order.</li>
 						<li>Variable <span class="highlight">first</span> was declared first, it’s stored in slot 0</li>
-                                  		<li>Items that need less than 32 bytes are packed together. <a href="https://docs.soliditylang.org/en/v0.8.2/internals/layout_in_storage.html#layout-of-state-variables-in-storage" target="_blank"> See Rules</a></li>
+                                  		<li>Items that need less than 32 bytes are packed together. <a href="https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html#layout-of-state-variables-in-storage" target="_blank"> See Rules</a></li>
 					</ul>
 					<pre><code data-trim>
 						contract Sample {
@@ -510,6 +512,78 @@
 					}
 				}
 				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Custom errors in solidity
+				* Older version : 
+					* `revert("Insufficient funds.")`
+				* Cons	
+					* Expensive deploy cost
+					* Difficult to use dynamic information
+				* `error` (`v0.8.4` & above) statement can be declared inside/outside of smart contracts
+				* [Issue](https://github.com/ethereum/solidity/issues/11278) in `try/catch` for custom error
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Custom errors in solidity : Example 1
+				```
+				// SPDX-License-Identifier: GPL-3.0
+				pragma solidity ^0.8.4;
+
+				error Unauthorized();
+
+				contract VendingMachine {
+					address payable owner = payable(msg.sender);
+
+					function withdraw() public {
+						if (msg.sender != owner)
+							revert Unauthorized();
+
+						owner.transfer(address(this).balance);
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				### Custom errors in solidity : Example 2
+				```
+				// SPDX-License-Identifier: GPL-3.0
+				pragma solidity ^0.8.4;
+
+				/// Insufficient balance for transfer. Needed `required` but only
+				/// `available` available.
+				/// @param available balance available.
+				/// @param required requested amount to transfer.
+				error InsufficientBalance(uint256 available, uint256 required);
+
+				contract TestToken {
+					mapping(address => uint) balance;
+					function transfer(address to, uint256 amount) public {
+						if (amount > balance[msg.sender])
+							// Error call using named parameters. Equivalent to
+							// revert InsufficientBalance(balance[msg.sender], amount);
+							revert InsufficientBalance({
+								available: balance[msg.sender],
+								required: amount
+							});
+						balance[msg.sender] -= amount;
+						balance[to] += amount;
+					}
+				}
+				```
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				## References
+
+				* [Solidity 0.8.4 Release Announcement](https://blog.soliditylang.org/2021/04/21/solidity-0.8.4-release-announcement/)
+				* [Custom errors in Solidity](https://blog.soliditylang.org/2021/04/21/custom-errors/)
+				* [Debugging a smart contract using truffle](https://www.trufflesuite.com/guides/debugging-a-smart-contract)
+				* [Debugging a smart contract using hardhat and tenderly](http://blog.tenderly.co/level-up-your-smart-contract-productivity-using-hardhat-and-tenderly/)
+				* [Understanding Ethereum contract storage](https://programtheblockchain.com/posts/2018/03/09/understanding-ethereum-smart-contract-storage/)
+					
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
