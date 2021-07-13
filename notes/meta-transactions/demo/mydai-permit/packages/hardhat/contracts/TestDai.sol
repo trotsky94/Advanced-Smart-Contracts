@@ -12,7 +12,7 @@ contract TestDai is ERC20("Dai Stablecoin", "Dai") {
   bytes32 public constant PERMIT_TYPEHASH = 0xea2aa0a1be11a07ed86d755c93467f4f82362b452371d1ba94d1715123511acb;
 
   constructor() public {
-    _mint(0xc783df8a850f42e7F7e57013759C285caa701eB6, 100 ether);
+    _mint(0xDa1d30af457b8386083C66c9Df7A86269bEbFDF8, 100 ether);
 
     DOMAIN_SEPARATOR = keccak256(abi.encode(
             keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
