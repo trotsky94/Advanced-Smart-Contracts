@@ -1,15 +1,26 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.1;
 
 interface AddNumbers {
-    function add(uint256 a, uint256 b) external returns (uint256 c);
+    function add(uint256 a, uint256 b) external pure returns (uint256 c);
+}
+
+contract AddNumberContract is AddNumbers {
+    function add(uint256 a, uint256 b) external pure override returns (uint256 c) {
+        c = a + b;
+    }
 }
 
 contract Example {
     AddNumbers addContract;
     event StringFailure(string stringFailure);
     event BytesFailure(bytes bytesFailure);
+    event PanicErrorEvent(uint256 errorCode);
+    
+    function setAddNumbers(AddNumbers _addContract ) public {
+        addContract = _addContract;
+    }
 
     function exampleFunction(uint256 _a, uint256 _b)
         public
@@ -22,6 +33,8 @@ contract Example {
             emit StringFailure(_err);
         } catch (bytes memory _err) {
             emit BytesFailure(_err);
+        } catch Panic (uint errorCode){
+            emit PanicErrorEvent(errorCode);
         }
     }
 }

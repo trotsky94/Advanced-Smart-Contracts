@@ -5,7 +5,8 @@ contract("ProxyDelegate", (accounts) => {
   let proxy;
   let lib;
   const owner = accounts[0];
-  const password = "0x70617373776f7264000000000000000000000000000000000000000000000000";
+  const password = "0x70617373776f7264000000000000000000000000000000000000000000000000"; // string = "password"
+  // ethers.utils.toUtf8String("0x70617373776f7264000000000000000000000000000000000000000000000000")
   before(async () => {
     lib = await VersionLibrary.deployed();
     proxy = await Delegator.deployed(lib.address, "0x70617373776f7264000000000000000000000000000000000000000000000000", { from: owner });
