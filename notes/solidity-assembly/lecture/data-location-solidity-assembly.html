@@ -33,7 +33,7 @@
 				<section data-markdown><textarea data-template>
 					### BCDV 1013 - Advanced Smart Contract
 					#### Data location in solidity assembly
-					<div class="author">Dhruvin Parikh , March 2021</div>
+					<div class="author">Dhruvin Parikh , July 2021</div>
 				</textarea></section>
 				<section data-markdown><textarea data-template>
 				### Topics
@@ -186,8 +186,8 @@
 
 				<section data-markdown><textarea data-template>
 				## State Variable Access
-				- <span class="highlightRed">`_slot`</span>: storage slot for the variable
-				- <span class="highlightRed">`_offset`</span>: byte offset for the variable
+				- <span class="highlightRed">`.slot`</span>: storage slot for the variable
+				- <span class="highlightRed">`.offset`</span>: byte offset for the variable
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
@@ -217,7 +217,7 @@
 					function getData() public view returns(bytes32){
 						assembly {
 							let data := sload(data3_slot)
-							let result := and(shr(shl(3,data3_offset), data), 0xff)
+							let result := and(shr(shl(3,data3.offset), data), 0xff)
 							mstore(0, result)
 							return(0,32)
 						}
@@ -228,6 +228,13 @@
 				<section data-markdown><textarea data-template>
 				## Lab
 				Following the instructions on the readme file of <a href="https://github.com/GeorgeBrownCollege-Toronto/Advanced-Smart-Contracts/tree/master/notes/solidity-assembly/lab/assembly-storage#readme" target="_blank">assembly-storage</a>
+				</textarea></section>
+
+				<section data-markdown><textarea data-template>
+				## References
+				* [Layout of state variable in storage](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html#layout-of-state-variables-in-storage)
+				* [Layout in memory](https://docs.soliditylang.org/en/latest/internals/layout_in_memory.html#layout-in-memory)
+				* [Layout of calldata](https://docs.soliditylang.org/en/latest/internals/layout_in_calldata.html#layout-of-call-data)
 				</textarea></section>
 
 				<section data-markdown><textarea data-template>
