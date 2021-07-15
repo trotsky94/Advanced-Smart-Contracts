@@ -22,8 +22,8 @@ git pull origin master && \
 mv notes/solidity-assembly/lab/assembly-storage/* . && \
 rm -rf ./.git ./notes
 ```
-2. install packages: npm install
-3. complete the contract/Storage.sol by returning the state variables as output
-4. run the test: npm test
+2. install packages: `yarn`
+3. complete the `contract/Storage.sol` by returning the state variables as output
+4. run the test: `yarn test`
 5. the test should pass
 6. Zip the project and submit on Blackboard.Do not include `node_modules` or you'll receive zero (but you can re-submit)

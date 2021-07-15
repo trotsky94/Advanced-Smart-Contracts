@@ -1,4 +1,6 @@
-pragma solidity >0.5.0;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.4;
 
 contract Storage {
     bytes4  bytes4data = 0xaabbccdd;
@@ -9,9 +11,9 @@ contract Storage {
     function getData() public view returns (bytes4 output1,uint64 output2,bool output3,address output4) {
         assembly {
             // return the values of bytes4data, uintdata, booldata, addrdata
-            let data := sload(bytes4data_slot)
+            let data := sload(bytes4data.slot)
             output1 := shl(224,and(data,0xffffffff))
-            output2 := shr(shl(3,uintdata_offset), data)
+            output2 := shr(shl(3,uintdata.offset), data)
         }
     }
 }
