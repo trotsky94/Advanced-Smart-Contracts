@@ -23,10 +23,10 @@ mv notes/solidity-assembly/lab/assembly-loop/* . && \
 rm -rf ./.git ./notes
 ```
 
-2. install packages: npm install
-3. run the test: npm test
+2. install packages: `yarn`
+3. run the test: `yarn test`
 4. the test should fail the gas test
-5. fix the failed test case by updating the BitWise.sol contract
-   - replace the logic in the countBitSetAsm() with inline assembly logic
-6. add a test case to verify the result for countBitSetAsm(0)
+5. fix the failed test case by updating the `BitWise.sol` contract
+   - replace the logic in the `countBitSetAsm()` with inline assembly logic
+6. add a test case to verify the result for `countBitSetAsm(0)`
 7. Zip the project and submit on black board. Do not zip with `node_modules`, you'll receive 0. (but you can re-submit)

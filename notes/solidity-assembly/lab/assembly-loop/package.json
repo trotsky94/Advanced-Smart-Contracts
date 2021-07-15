@@ -20,9 +20,9 @@
   "devDependencies": {
     "bn.js": "^5.2.0",
     "chai": "^4.3.4",
-    "chai-bn": "^0.2.1",
-    "truffle": "^5.2.4",
-    "@openzeppelin/test-helpers": "^0.5.10"
+    "chai-bn": "^0.2.2",
+    "truffle": "^5.4.1",
+    "@openzeppelin/test-helpers": "^0.5.12"
   },
   "dependencies": {}
 }
